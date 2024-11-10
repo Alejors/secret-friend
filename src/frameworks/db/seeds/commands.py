@@ -13,6 +13,5 @@ def seed(
     
     sqlalchemy_client.load_script(f"{path}/tables-dll.sql", throw_exception=False)
     sqlalchemy_client.load_script(f"{path}/init-data.sql", throw_exception=False)
-    sqlalchemy_client.load_script(f"{path}/update-dates.sql", throw_exception=False)
 
   return command

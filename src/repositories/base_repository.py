@@ -1,4 +1,7 @@
-class SQLAlchemyBaseRepository:
+from src.interfaces import IDataRepository
+
+
+class SQLAlchemyBaseRepository(IDataRepository):
     def __init__(self, sqlalchemy_client, query_class=None):
         self.session_factory = sqlalchemy_client.session_factory
         self.query_class = query_class
@@ -29,6 +32,7 @@ class SQLAlchemyBaseRepository:
       with self.session_factory() as session:
         session.add(instance)
         session.commit()
+
         return instance
 
     def update(

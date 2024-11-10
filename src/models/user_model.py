@@ -9,8 +9,8 @@ def map_user(sqlalchemy_client):
     "users",
     [
       Column("id", Integer, primary_key=True),
-      Column("name", String, nullable=False),
-      Column("email", String, nullable=False),
-      Column("password", String, nullable=False),
+      Column("name", String(50), nullable=False),
+      Column("email", String(100), nullable=False, unique=True),
+      Column("password", String(250), nullable=False),
     ],
   )
