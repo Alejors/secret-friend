@@ -1,1 +1,2 @@
 from .sqlalchemy_user_repository import SQLAlchemyUsersRepository
+from .sqlalchemy_event_repository import SQLAlchemyEventsRepository

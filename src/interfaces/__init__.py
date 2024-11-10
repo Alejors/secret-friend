@@ -1,1 +1,1 @@
-from .users_interface import IDataRepository
+from .data_interface import IDataRepository

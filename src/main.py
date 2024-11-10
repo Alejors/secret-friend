@@ -2,7 +2,11 @@ from src.frameworks.db.seeds.commands import seed
 from src.frameworks.http.flask import create_flask_app
 from src.frameworks.db.sqlalchemy import SQLAlchemyClient
 
-from src.repositories import SQLAlchemyUsersRepository
+from src.repositories import (
+    SQLAlchemyUsersRepository,
+    SQLAlchemyEventsRepository,
+)
+
 from src.usecases import ManageUsersUsecase
 from src.controllers import (
     create_users_controller,
@@ -13,6 +17,7 @@ from src.controllers import (
 # Repositories
 sqlalchemy_client = SQLAlchemyClient()
 sqlalchemy_user_repository = SQLAlchemyUsersRepository(sqlalchemy_client)
+sqlalchemy_event_repository = SQLAlchemyEventsRepository(sqlalchemy_client)
 
 # Usecases
 users_usecase = ManageUsersUsecase(sqlalchemy_user_repository)
