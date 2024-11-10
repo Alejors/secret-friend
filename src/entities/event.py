@@ -9,8 +9,8 @@ class Event(BaseEntity):
   id: int | None = None
   name: str = None
   owner_id: int = None
-  min_amount: int | None = None
-  max_amount: int | None = None
+  min_price: int | None = None
+  max_price: int | None = None
   created_at: datetime = None
   updated_at: datetime = None
   deleted_at: datetime | None = None
@@ -21,6 +21,6 @@ class Event(BaseEntity):
       id=_dict.get("id"),
       name=_dict.get("name"),
       owner_id=_dict.get("owner_id"),
-      min_amount=_dict.get("min_amount"),
-      max_amount=_dict.get("max_amount")
+      min_price=_dict.get("min_price"),
+      max_price=_dict.get("max_price")
     )

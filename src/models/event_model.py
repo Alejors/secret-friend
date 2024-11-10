@@ -22,8 +22,8 @@ def map_event(sqlalchemy_client):
       Column("id", Integer, primary_key=True),
       Column("name", String(50), nullable=False),
       Column("owner_id", ForeignKey("users.id"), nullable=False),
-      Column("min_amount", Integer),
-      Column("max_amount", Integer),
+      Column("min_price", Integer),
+      Column("max_price", Integer),
     ],
     properties={
       "owner": relationship(
