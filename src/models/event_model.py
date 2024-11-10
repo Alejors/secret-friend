@@ -1,4 +1,4 @@
-from sqlalchemy import Table, Column, Integer, String, ForeignKey
+from sqlalchemy import Table, Column, Integer, String, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import relationship
 
 from src.entities import Event
@@ -11,7 +11,8 @@ def map_event(sqlalchemy_client):
     sqlalchemy_client.mapper_registry.metadata,
     Column('user_id', Integer, ForeignKey('users.id'), nullable=False),
     Column('event_id', Integer, ForeignKey('events.id'), nullable=False),
-    Column('pick_id', Integer, ForeignKey('users.id'), nullable=True)
+    Column('pick_id', Integer, ForeignKey('users.id'), nullable=True),
+    UniqueConstraint('user_id', 'event_id', name='uix_user_event')
   )
   
   sqlalchemy_client.map_entity_to_table(

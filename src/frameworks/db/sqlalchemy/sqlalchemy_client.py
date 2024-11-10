@@ -150,4 +150,4 @@ class SQLAlchemyClient:
             if throw_exception:
               raise e
             else:
-              print(e)
+              logging.error(e, exc_info=True)
