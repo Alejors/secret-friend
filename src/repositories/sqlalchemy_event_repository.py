@@ -1,9 +1,7 @@
 from .base_repository import SQLAlchemyBaseRepository
-from src.entities import Event
-from src.models import map_event
+from src.models import Event
 
 
 class SQLAlchemyEventsRepository(SQLAlchemyBaseRepository):
   def __init__(self, sqlalchemy_client):
     super().__init__(sqlalchemy_client, Event)
-    map_event(sqlalchemy_client)

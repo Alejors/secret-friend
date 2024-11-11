@@ -1,16 +1,28 @@
 from sqlalchemy import Column, Integer, String
 
-from src.entities import User
+from src.frameworks.db.sqlalchemy import Base
+from src.models.base_model import SQLAlchemyBaseModel
 
 
-def map_user(sqlalchemy_client):
-  sqlalchemy_client.map_entity_to_table(
-    User,
-    "users",
-    [
-      Column("id", Integer, primary_key=True),
-      Column("name", String(50), nullable=False),
-      Column("email", String(100), nullable=False, unique=True),
-      Column("password", String(250), nullable=False),
-    ],
-  )
+class User(SQLAlchemyBaseModel, Base):
+  __tablename__ = "users"
+  
+  id = Column(Integer, primary_key=True)
+  name = Column(String(50), nullable=False)
+  email = Column(String(100), nullable=False, unique=True)
+  password = Column(String(250), nullable=False)
+
+  @classmethod
+  def from_dict(cls, _dict: dict):
+    return User(
+      id=_dict.get("id"),
+      name=_dict.get("name"),
+      email=_dict.get("email"),
+      password=_dict.get("password")
+    )
+    
+  def serialize_user(self) -> dict:
+    data = self.serialize()
+    del data["password"]
+    
+    return data

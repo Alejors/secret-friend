@@ -1,3 +1,3 @@
-from .user_model import map_user
-from .event_model import map_event
-from .wishlist_model import map_wishlist
+from .user_model import User
+from .event_model import Event
+from .wishlist_model import Wish

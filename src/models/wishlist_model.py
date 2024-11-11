@@ -1,18 +1,24 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 
-from src.entities import Wish
+from src.frameworks.db.sqlalchemy import Base
+from src.models.base_model import SQLAlchemyBaseModel
 
 
-def map_wishlist(sqlalchemy_client):
+class Wish(SQLAlchemyBaseModel, Base):
+  __tablename__ = "wishlist"
   
-  sqlalchemy_client.map_entity_to_table(
-    Wish,
-    "wishlist",
-    [
-      Column("id", Integer, primary_key=True),
-      Column("user_id", ForeignKey("users.id"), nullable=False),
-      Column("event_id", ForeignKey("events.id"), nullable=False),
-      Column("element", String(50), nullable=False),
-      Column("url", String(250), nullable=True),
-    ],
-  )
+  id = Column(Integer, primary_key=True)
+  user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+  event_id = Column(Integer, ForeignKey("events.id"), nullable=False)
+  element = Column(String(50), nullable=False)
+  url = Column(String(250), nullable=True)
+  
+  @classmethod
+  def from_dict(cls, _dict: dict):
+    return Wish(
+      id=_dict.get("id"),
+      user_id=_dict.get("user_id"),
+      event_id=_dict.get("event_id"),
+      element=_dict.get("element"),
+      url=_dict.get("url")
+    )

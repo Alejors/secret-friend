@@ -1,4 +1,4 @@
-from src.entities import User
+from src.models import User
 from src.interfaces import IDataRepository
 
 from src.utils import hash_password, check_password, create_token
@@ -33,6 +33,13 @@ class ManageUsersUsecase:
     user_created = self._user_repository.insert(user)
     
     return self.get_user_by_id(user_created.id), None
+  
+  def update_user(self, user_id: int, data: dict) -> User:
+    user_exists = self.get_user_by_id(user_id)
+    if not user_exists:
+      return None, "User Not Found"
+    
+    return self._user_repository.update(user_id, data), None
   
   def user_log_in(self, data: dict) -> tuple[str|None, str|None]:
     user_email = data["email"]
