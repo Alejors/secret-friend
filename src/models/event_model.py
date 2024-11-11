@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Table, UniqueConstraint, TIMESTAMP
+from sqlalchemy import Column, Integer, String, ForeignKey, Table, UniqueConstraint, TIMESTAMP, Boolean, and_
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 
@@ -14,6 +14,7 @@ class Event(SQLAlchemyBaseModel, Base):
   owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
   min_price = Column(Integer)
   max_price = Column(Integer)
+  drawn = Column(Boolean, default=False)
   
   event_users = Table(
     'event_users',
@@ -34,7 +35,7 @@ class Event(SQLAlchemyBaseModel, Base):
     backref="events", 
     lazy="joined", 
     primaryjoin="Event.id == event_users.c.event_id", 
-    secondaryjoin="User.id == event_users.c.user_id"
+    secondaryjoin="and_(User.id == event_users.c.user_id, event_users.c.deleted_at == None)"
   )
   
   __table_args__ = (
@@ -48,7 +49,8 @@ class Event(SQLAlchemyBaseModel, Base):
       name=_dict.get("name"),
       owner_id=_dict.get("owner_id"),
       min_price=_dict.get("min_price"),
-      max_price=_dict.get("max_price")
+      max_price=_dict.get("max_price"),
+      drawn=_dict.get("drawn")
     )
     
   def serialize_event(self) -> dict:
