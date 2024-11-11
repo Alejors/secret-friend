@@ -18,15 +18,7 @@ def create_events_controller(events_usecase: ManageEventsUsecase):
     event_id = int(request.args.get("id"))
     event = events_usecase.get_event_by_id(event_id)
     if event:
-      event_users = event.users
-      event_owner = event.owner
-      
-      event_data = event.serialize()
-  
-      event_data["owner"] = event_owner.serialize_user()
-      del event_data["owner_id"]
-      
-      event_data["users"] = [user.serialize_user() for user in event_users]
+      event_data = event.serialize_event()
       response = {
         "code": SUCCESS_CODE,
         "message": "Event Obtained",
@@ -49,17 +41,8 @@ def create_events_controller(events_usecase: ManageEventsUsecase):
     data = request.get_json()
     data["owner_id"] = owner_id
     event, error = events_usecase.create_event(data)
-    if event:
-      event_users = event.users
-      event_owner = event.owner
-      
-      event_data = event.serialize()
-      
-      event_data["owner"] = event_owner.serialize_user()
-      del event_data["owner_id"]
-      
-      event_data["users"] = [user.serialize_user() for user in event_users]
-      
+    if event:    
+      event_data = event_data = event.serialize_event()
       response = {
         "code": SUCCESS_CODE,
         "message": "Event Created",
@@ -75,9 +58,10 @@ def create_events_controller(events_usecase: ManageEventsUsecase):
     
     return jsonify(response), status_code
   
-  @blueprint.route("/event", methods=["POST"])
+  @blueprint.route("/event", methods=["PUT", "PATCH"])
   @jwt_required()
-  def update_participants():
+  def update_event():
+    user_id = int(get_jwt_identity())
     event_id = request.args.get("event_id")
     if not event_id:
       response = {
@@ -86,7 +70,23 @@ def create_events_controller(events_usecase: ManageEventsUsecase):
       }
       status_code = BAD_REQUEST
     else:
-      pass
+      data = request.get_json()
+      event, error = events_usecase.update_event(user_id, event_id, data)
+      if event:
+        event_data = event.serialize_event()
+        response = {
+          "code": SUCCESS_CODE,
+          "message": "Event Updated",
+          "data": event_data
+        }
+        status_code = OK
+      else:
+        response = {
+          "code": FAIL_CODE,
+          "message": error
+        }
+        status_code = BAD_REQUEST
+    return jsonify(response), status_code
   
   @blueprint.route("/get-pick", methods=["GET"])
   @jwt_required()
