@@ -1,4 +1,4 @@
-from sqlalchemy import select, and_
+from sqlalchemy import select, and_, update
 
 from src.models import User, Event
 
@@ -30,4 +30,19 @@ class SQLAlchemyEventUsersRepository:
       }
       
       session.execute(Event.event_users.insert().values(event_user))
+      session.commit()
+      
+  def update_participation(self, user_id: int, event_id: int, values: dict):
+    with self.session_factory() as session:      
+      query = (
+        update(Event.event_users)
+        .where(and_(
+          Event.event_users.c.user_id == user_id,
+          Event.event_users.c.event_id == event_id
+          )
+        )
+        .values(**values)
+      )
+      
+      session.execute(query)
       session.commit()
