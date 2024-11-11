@@ -161,6 +161,8 @@ class ManageEventsUsecase:
     event = self.get_event_by_id(event_id)
     if not event:
       return None, "Event Not Found"
+    if user_id not in [participant.id for participant in event.users]:
+      return None, "User Not in Event"
     if not event.drawn:
       return None, "Event Not Drawn Yet"
     pick_user = self._event_users_repository.get_pick(user_id, event_id)
