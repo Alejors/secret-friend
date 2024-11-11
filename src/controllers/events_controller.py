@@ -62,7 +62,7 @@ def create_events_controller(events_usecase: ManageEventsUsecase):
   @jwt_required()
   def update_event():
     user_id = int(get_jwt_identity())
-    event_id = request.args.get("event_id")
+    event_id = int(request.args.get("event_id"))
     if not event_id:
       response = {
         "code": FAIL_CODE,
@@ -92,7 +92,7 @@ def create_events_controller(events_usecase: ManageEventsUsecase):
   @jwt_required()
   def get_pick():
     user_id = int(get_jwt_identity())
-    event_id = request.args.get("event_id")
+    event_id = int(request.args.get("event_id"))
     if not event_id:
       response = {
         "code": FAIL_CODE,
@@ -125,5 +125,31 @@ def create_events_controller(events_usecase: ManageEventsUsecase):
         
       return jsonify(response), status_code
   
-  
+  @blueprint.route("/draw-event", methods=["POST"])
+  @jwt_required()
+  def draw_event():
+    user_id = int(get_jwt_identity())
+    event_id = int(request.args.get("event_id"))
+    if not event_id:
+      response = {
+        "code": FAIL_CODE,
+        "message": "Event ID Needed"
+      }
+      status_code = BAD_REQUEST
+    else:
+      drawn, error = events_usecase.draw_event(user_id, event_id)
+      if not drawn:
+        response = {
+          "code": FAIL_CODE,
+          "message": error
+        }
+        status_code = INTERNAL_SERVER_ERROR
+      else:
+        response = {
+          "code": SUCCESS_CODE,
+          "message": "Event Drawn"
+        }
+        status_code = OK
+              
+    return jsonify(response), status_code
   return blueprint

@@ -1,3 +1,5 @@
+import copy
+import random
 from datetime import datetime
 from sqlalchemy.exc import IntegrityError
 
@@ -119,6 +121,41 @@ class ManageEventsUsecase:
     if len(errors) > 0:
       return None, ", ".join(errors)
     return self.get_event_by_id(event_exist.id), None
+
+  def draw_event(self, user_id: int, event_id: int) -> tuple[bool, str|None]:
+    event = self.get_by_owner_id_and_event_id(user_id, event_id)
+    if not event:
+      return False, "No Event Matches Owner and ID"
+    if event.drawn:
+      return False, "Event Already Drawn"
+    # listamos todos los participantes del concurso
+    event_participants_ids = [participant.id for participant in event.users]
+    # realizamos una copia que iremos modificando
+    not_picked_participants = copy.copy(event_participants_ids)
+    # iteramos todos los participantes desde la lista que no se modifica
+    try:
+      for participant in event_participants_ids:
+        # copiamos la lista de los no seleccionados
+        possible_picks = list(filter(lambda possible_pick: possible_pick != participant, not_picked_participants))
+        
+        # obtenemos un número al azar correspondiente al indice de la lista
+        pick_idx = random.randrange(0, len(possible_picks))
+        # recuperamos el id que corresponda
+        pick = possible_picks[pick_idx]
+        
+        # actualizamos la tabla event_user
+        pick_selection = {"pick_id": pick}
+        self._event_users_repository.update_participation(participant, event.id, pick_selection)
+        # quitamos este elemento de la lista de los no escogidos aún
+        not_picked_participants.remove(pick)
+      self._events_repository.update(event.id, {"drawn": True})
+      return True, None
+    # Si falla cualquier update, tenemos que eliminar cualquier update que alcanzó a hacerse
+    except Exception as e:
+      remove_pick = {"pick_id": None}
+      for participant in event_participants_ids:
+        self._event_users_repository.update_participation(participant, event.id, remove_pick)
+      return False, f"Rolledback. An Error Ocurred: {str(e)}"
 
   def get_pick_from_event(self, user_id: int, event_id: int) -> tuple[User|None, str|None]:
     event = self.get_event_by_id(event_id)
