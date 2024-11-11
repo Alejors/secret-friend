@@ -101,9 +101,10 @@ def create_events_controller(events_usecase: ManageEventsUsecase):
       status_code = BAD_REQUEST
     else:
       try:
-        pick_user, error = events_usecase.get_pick_from_event(user_id, event_id)
+        pick_user, wishlist, error = events_usecase.get_pick_from_event(user_id, event_id)
         if pick_user:
           user_data = pick_user.serialize_user()
+          user_data["wishlist"] = [wish.serialize() for wish in wishlist if wish]
           response = {
             "code": SUCCESS_CODE,
             "message": "Pick User Fetched",

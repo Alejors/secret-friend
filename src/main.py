@@ -32,12 +32,13 @@ sqlalchemy_event_user_repository = SQLAlchemyEventUsersRepository(sqlalchemy_cli
 
 # Usecases
 users_usecase = ManageUsersUsecase(sqlalchemy_user_repository)
+wishlist_usecase = ManageWishlistUsecase(sqlalchemy_wishlist_repository)
 events_usecase = ManageEventsUsecase(
     sqlalchemy_event_repository, 
     sqlalchemy_event_user_repository, 
     users_usecase,
+    wishlist_usecase,
 )
-wishlist_usecase = ManageWishlistUsecase(sqlalchemy_wishlist_repository)
 
 blueprints = [
     create_healthcheck(),

@@ -3,9 +3,10 @@ import random
 from datetime import datetime
 from sqlalchemy.exc import IntegrityError
 
-from src.models import Event, User
+from src.models import Event, User, Wish
 from src.interfaces import IDataRepository
 from src.usecases import ManageUsersUsecase
+from src.usecases.wishlist_usecase import ManageWishlistUsecase
 from src.repositories import SQLAlchemyEventUsersRepository
 
 
@@ -15,10 +16,12 @@ class ManageEventsUsecase:
     events_repository: IDataRepository, 
     event_user_repository: SQLAlchemyEventUsersRepository,
     users_usecase: ManageUsersUsecase,
+    wishlist_usecase: ManageWishlistUsecase,
   ):
     self._event_users_repository = event_user_repository
     self._events_repository = events_repository
     self._users_usecase = users_usecase
+    self._wishlist_usecase = wishlist_usecase
     
   def _get_event(self, filters: dict) -> Event|None:
     return self._events_repository.get(filters=filters, first_only=True)
@@ -157,17 +160,18 @@ class ManageEventsUsecase:
         self._event_users_repository.update_participation(participant, event.id, remove_pick)
       return False, f"Rolledback. An Error Ocurred: {str(e)}"
 
-  def get_pick_from_event(self, user_id: int, event_id: int) -> tuple[User|None, str|None]:
+  def get_pick_from_event(self, user_id: int, event_id: int) -> tuple[User|None, list[Wish]|None, str|None]:
     event = self.get_event_by_id(event_id)
     if not event:
-      return None, "Event Not Found"
+      return None, None, "Event Not Found"
     if user_id not in [participant.id for participant in event.users]:
-      return None, "User Not in Event"
+      return None, None, "User Not in Event"
     if not event.drawn:
-      return None, "Event Not Drawn Yet"
+      return None, None, "Event Not Drawn Yet"
     pick_user = self._event_users_repository.get_pick(user_id, event_id)
     if pick_user:
-      return pick_user, None
-    return None, "User Not Found"
+      wishlist = self._wishlist_usecase.get_wishlist_by_user_and_event(pick_user.id, event.id)
+      return pick_user, wishlist, None
+    return None, None, "User Not Found"
   
   
