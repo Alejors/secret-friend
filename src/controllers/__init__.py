@@ -1,2 +1,3 @@
 from .users_controller import create_users_controller
 from .health_check import create_healthcheck
+from .events_controller import create_events_controller

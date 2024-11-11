@@ -25,7 +25,14 @@ class Event(SQLAlchemyBaseModel, Base):
   max_price = Column(Integer)
   
   owner = relationship("User", foreign_keys=[owner_id], viewonly=True, lazy="joined")
-  users = relationship("User", secondary=event_users, backref="events", lazy="joined", primaryjoin="Event.id == event_users.c.event_id", secondaryjoin="User.id == event_users.c.user_id")
+  users = relationship(
+    "User", 
+    secondary=event_users, 
+    backref="events", 
+    lazy="joined", 
+    primaryjoin="Event.id == event_users.c.event_id", 
+    secondaryjoin="User.id == event_users.c.user_id"
+  )
 
   @classmethod
   def from_dict(cls, _dict: dict):

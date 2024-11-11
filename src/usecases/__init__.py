@@ -1,1 +1,2 @@
 from .users_usecase import ManageUsersUsecase
+from .event_usecase import ManageEventsUsecase
