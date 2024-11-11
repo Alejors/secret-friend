@@ -2,8 +2,8 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import get_jwt_identity, jwt_required
 
 from src.frameworks.validation.validation import validate_schema_flask
-#AGREGAR ESQUEMAS DE VALIDACION
-
+from src.frameworks.validation.schemas import EVENT_CREATION_SCHEMA
+ 
 from src.usecases import ManageEventsUsecase
 
 from src.frameworks.http.http_response_codes import *
@@ -40,6 +40,53 @@ def create_events_controller(events_usecase: ManageEventsUsecase):
       }
       status_code = NOT_FOUND
     return jsonify(response), status_code
+  
+  @blueprint.route("/event", methods=["POST"])
+  @validate_schema_flask(EVENT_CREATION_SCHEMA)
+  @jwt_required()
+  def create_event():
+    owner_id = int(get_jwt_identity())
+    data = request.get_json()
+    data["owner_id"] = owner_id
+    event, error = events_usecase.create_event(data)
+    if event:
+      event_users = event.users
+      event_owner = event.owner
+      
+      event_data = event.serialize()
+      
+      event_data["owner"] = event_owner.serialize_user()
+      del event_data["owner_id"]
+      
+      event_data["users"] = [user.serialize_user() for user in event_users]
+      
+      response = {
+        "code": SUCCESS_CODE,
+        "message": "Event Created",
+        "data": event_data
+      }
+      status_code = CREATED
+    else:
+      response = {
+        "code": FAIL_CODE,
+        "message": f"An Error Ocurred: {error}"
+      }
+      status_code = INTERNAL_SERVER_ERROR
+    
+    return jsonify(response), status_code
+  
+  @blueprint.route("/event", methods=["POST"])
+  @jwt_required()
+  def update_participants():
+    event_id = request.args.get("event_id")
+    if not event_id:
+      response = {
+        "code": FAIL_CODE,
+        "message": "Event ID Needed"
+      }
+      status_code = BAD_REQUEST
+    else:
+      pass
   
   @blueprint.route("/get-pick", methods=["GET"])
   @jwt_required()

@@ -14,7 +14,7 @@ class Event(SQLAlchemyBaseModel, Base):
     Column('event_id', Integer, ForeignKey('events.id'), primary_key=True, nullable=False),
     Column('pick_id', Integer, ForeignKey('users.id'), nullable=True),
     UniqueConstraint('user_id', 'event_id', name='uix_user_event')
-)
+  )
   
   __tablename__ = 'events'
   
@@ -32,6 +32,10 @@ class Event(SQLAlchemyBaseModel, Base):
     lazy="joined", 
     primaryjoin="Event.id == event_users.c.event_id", 
     secondaryjoin="User.id == event_users.c.user_id"
+  )
+  
+  __table_args__ = (
+    UniqueConstraint('name', 'owner_id', name='uix_name_owner'),
   )
 
   @classmethod

@@ -30,7 +30,11 @@ sqlalchemy_event_user_repository = SQLAlchemyEventUsersRepository(sqlalchemy_cli
 
 # Usecases
 users_usecase = ManageUsersUsecase(sqlalchemy_user_repository)
-events_usecase = ManageEventsUsecase(sqlalchemy_event_repository, sqlalchemy_event_user_repository)
+events_usecase = ManageEventsUsecase(
+    sqlalchemy_event_repository, 
+    sqlalchemy_event_user_repository, 
+    users_usecase,
+)
 
 blueprints = [
     create_healthcheck(),

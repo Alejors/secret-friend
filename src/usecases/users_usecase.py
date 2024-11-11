@@ -15,11 +15,11 @@ class ManageUsersUsecase:
     filters = {"id": id}
     return self._get_user(filters)
   
-  def get_user_by_email(self, email: str) -> tuple[User|None, str|None]:
+  def get_user_by_email(self, email: str) -> User|None:
     filters = {"email": email}
     return self._get_user(filters)
   
-  def create_user(self, data: dict) -> User:
+  def create_user(self, data: dict) -> tuple[User|None, str|None]:
     user_exists = self.get_user_by_email(data["email"])
     if user_exists:
       return None, "Email Already in Use"

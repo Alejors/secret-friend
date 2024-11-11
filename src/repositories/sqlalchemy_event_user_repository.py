@@ -21,3 +21,13 @@ class SQLAlchemyEventUsersRepository:
       )
       result = session.execute(query).first()
       return result[0] if result else None
+    
+  def insert_participant(self, user_id: int, event_id: int):
+    with self.session_factory() as session:
+      event_user = {
+        "user_id": user_id,
+        "event_id": event_id
+      }
+      
+      session.execute(Event.event_users.insert().values(event_user))
+      session.commit()
