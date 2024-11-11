@@ -27,7 +27,7 @@ fileConfig(config.config_file_name)
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 from src import main
-target_metadata = main.sqlalchemy_client.mapper_registry.metadata
+target_metadata = main.sqlalchemy_client.get_metadata()
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

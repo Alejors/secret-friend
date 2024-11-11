@@ -1,7 +1,7 @@
 import os
 import logging
 
-from sqlalchemy import create_engine, Table, Column, TIMESTAMP
+from sqlalchemy import create_engine, Table
 from sqlalchemy.engine import url
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import close_all_sessions, sessionmaker, registry
@@ -47,40 +47,15 @@ class SQLAlchemyClient:
     self.session_factory = sessionmaker(bind=self.engine, expire_on_commit=False)
     self.mapper_registry = registry()
 
-  def map_entity_to_table(
-    self,
-    entity_class,
-    table_name: str,
-    columns: list,
-    include_date_columns: bool = True,
-    properties: dict = None,
-  ):
-    """
-    Mapea una entidad a una tabla, útil al usar el repositorio con estilo imperativo.
-    """
-    if include_date_columns:
-      columns += [
-        Column("created_at", TIMESTAMP, server_default=func.now(), nullable=False),
-        Column("updated_at", TIMESTAMP, server_default=func.now(), onupdate=func.current_timestamp(), nullable=False),
-        Column("deleted_at", TIMESTAMP),
-      ]
-
-    table = Table(
-      table_name,
-      self.mapper_registry.metadata,
-      *columns,
-    )
-
-    self.mapper_registry.map_imperatively(entity_class, table, properties=properties)
-
-    return table
+  def get_metadata(self):
+    return Base.metadata
 
   def create_tables(self):
     """
     Crea las tablas que aún no están creadas en la base de datos.
     """
     Base.metadata.create_all(self.engine)
-    self.mapper_registry.metadata.create_all(self.engine)
+    # self.mapper_registry.metadata.create_all(self.engine)
 
   def drop_table(self, table: Table):
     """

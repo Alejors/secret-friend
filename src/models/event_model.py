@@ -1,11 +1,18 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Table, UniqueConstraint
 from sqlalchemy.orm import relationship
 
-from src.frameworks.db.sqlalchemy import Base
+from src.frameworks.db.sqlalchemy.sqlalchemy_client import Base
 from src.models.base_model import SQLAlchemyBaseModel
 
 
 class Event(SQLAlchemyBaseModel, Base):
+  __tablename__ = 'events'
+  
+  id = Column(Integer, primary_key=True)
+  name = Column(String(50), nullable=False)
+  owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+  min_price = Column(Integer)
+  max_price = Column(Integer)
   
   event_users = Table(
     'event_users',
@@ -15,14 +22,6 @@ class Event(SQLAlchemyBaseModel, Base):
     Column('pick_id', Integer, ForeignKey('users.id'), nullable=True),
     UniqueConstraint('user_id', 'event_id', name='uix_user_event')
   )
-  
-  __tablename__ = 'events'
-  
-  id = Column(Integer, primary_key=True)
-  name = Column(String(50), nullable=False)
-  owner_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-  min_price = Column(Integer)
-  max_price = Column(Integer)
   
   owner = relationship("User", foreign_keys=[owner_id], viewonly=True, lazy="joined")
   users = relationship(

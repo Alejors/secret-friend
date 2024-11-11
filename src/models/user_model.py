@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String
 
-from src.frameworks.db.sqlalchemy import Base
+from src.frameworks.db.sqlalchemy.sqlalchemy_client import Base
 from src.models.base_model import SQLAlchemyBaseModel
 
 

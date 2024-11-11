@@ -6,7 +6,7 @@ from datetime import datetime
 
 from src.utils import format_date
 
-from src.frameworks.db.sqlalchemy import Base
+from src.frameworks.db.sqlalchemy.sqlalchemy_client import Base
 
 
 class SQLAlchemyBaseModel(Base):
