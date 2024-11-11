@@ -3,16 +3,16 @@ from src.frameworks.validation.validation import validate_schema_flask
 from src.frameworks.validation.schemas import REGISTRY_VALIDATION_SCHEMA, LOGIN_VALIDATION_SCHEMA
 
 from src.usecases import ManageUsersUsecase
-from src.frameworks.http.http_response_codes import *
 from src.frameworks.http.codes_constants import *
+from src.frameworks.http.http_response_codes import *
 
 
 def create_users_controller(users_usecase: ManageUsersUsecase):
   blueprint = Blueprint("users", __name__, url_prefix="/v1")
   
   @blueprint.route("/user", methods=["GET"])
-  def get_user_by_id(user_id):
-    user_id = request.args.get("id")
+  def get_user_by_id():
+    user_id = int(request.args.get("id"))
     if not user_id:
       response = {
         "code": FAIL_CODE,
@@ -25,7 +25,7 @@ def create_users_controller(users_usecase: ManageUsersUsecase):
         response = {
           "code": SUCCESS_CODE,
           "message": "User Found",
-          "data": user.serialize()
+          "data": user.serialize_user()
         }
         response_code = OK
       else:
@@ -35,6 +35,34 @@ def create_users_controller(users_usecase: ManageUsersUsecase):
         }
         response_code = NOT_FOUND
     
+    return jsonify(response), response_code
+  
+  @blueprint.route("/user", methods=["PUT", "PATCH"])
+  def update_user():
+    user_id = int(request.args.get("id"))
+    if not user_id:
+      response = {
+        "code": FAIL_CODE,
+        "message": "User ID required"
+      }
+      response_code = NOT_FOUND
+    else:
+      data = request.get_json()
+      user_updated, error = users_usecase.update_user(user_id, data)
+      if user_updated:
+        response = {
+          "code": SUCCESS_CODE,
+          "message": "User Updated",
+          "data": user_updated.serialize_user()
+        }
+        response_code = OK
+      else:
+        response = {
+          "code": FAIL_CODE,
+          "message": f"Error Ocurred while Updateing {error}"
+        }
+        response_code = BAD_REQUEST
+        
     return jsonify(response), response_code
   
   @blueprint.route("/register", methods=["POST"])
