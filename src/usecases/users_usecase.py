@@ -30,7 +30,10 @@ class ManageUsersUsecase:
     # Creamos un User en base al dict del request
     user = User.from_dict(data)
     # Insertamos la entidad y almacenamos en una variable.
-    user_created = self._user_repository.insert(user)
+    try:
+      user_created = self._user_repository.insert(user)
+    except Exception as e:
+      return None, str(e)
     
     return self.get_user_by_id(user_created.id), None
   
@@ -38,8 +41,12 @@ class ManageUsersUsecase:
     user_exists = self.get_user_by_id(user_id)
     if not user_exists:
       return None, "User Not Found"
+    try:
+      user_updated = self._user_repository.update(user_id, data)  
+      return user_updated, None
     
-    return self._user_repository.update(user_id, data), None
+    except Exception as e:
+      return None, str(e)
   
   def user_log_in(self, data: dict) -> tuple[str|None, str|None]:
     user_email = data["email"]

@@ -1,4 +1,6 @@
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import get_jwt_identity, jwt_required
+
 from src.frameworks.validation.validation import validate_schema_flask
 from src.frameworks.validation.schemas import REGISTRY_VALIDATION_SCHEMA, LOGIN_VALIDATION_SCHEMA
 
@@ -38,8 +40,9 @@ def create_users_controller(users_usecase: ManageUsersUsecase):
     return jsonify(response), response_code
   
   @blueprint.route("/user", methods=["PUT", "PATCH"])
+  @jwt_required()
   def update_user():
-    user_id = int(request.args.get("id"))
+    user_id = int(get_jwt_identity())
     if not user_id:
       response = {
         "code": FAIL_CODE,
