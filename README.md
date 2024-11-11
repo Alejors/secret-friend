@@ -84,3 +84,7 @@ docker-compose exec api flask --app src.main:app seed
 Esto correrá los scripts SQL definidos en el comando:
 
 - init-data.sql
+
+La contraseña definida para los usuarios de prueba es Hola1234, considerando que se use el *JWT_SECRET_KEY* **MyM3g45up3r53cr3tK3y!**. 
+
+*nota*: por favor no usar este secret key en ambientes productivos.
