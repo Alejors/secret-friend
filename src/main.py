@@ -12,12 +12,14 @@ from src.repositories import (
 from src.usecases import (
     ManageUsersUsecase,
     ManageEventsUsecase,
+    ManageWishlistUsecase,
 )
 
 from src.controllers import (
     create_users_controller,
     create_healthcheck,
     create_events_controller,
+    create_wishlist_controller,
 )
 
 
@@ -35,11 +37,13 @@ events_usecase = ManageEventsUsecase(
     sqlalchemy_event_user_repository, 
     users_usecase,
 )
+wishlist_usecase = ManageWishlistUsecase(sqlalchemy_wishlist_repository)
 
 blueprints = [
     create_healthcheck(),
     create_users_controller(users_usecase),
     create_events_controller(events_usecase),
+    create_wishlist_controller(wishlist_usecase),
 ]
 
 commands = {

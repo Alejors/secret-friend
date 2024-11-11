@@ -1,2 +1,3 @@
 from .users_usecase import ManageUsersUsecase
 from .event_usecase import ManageEventsUsecase
+from .wishlist_usecase import ManageWishlistUsecase
