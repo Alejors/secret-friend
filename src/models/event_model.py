@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Table, UniqueConstraint
+from sqlalchemy import Column, Integer, String, ForeignKey, Table, UniqueConstraint, TIMESTAMP
+from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 
 from src.frameworks.db.sqlalchemy.sqlalchemy_client import Base
@@ -20,6 +21,9 @@ class Event(SQLAlchemyBaseModel, Base):
     Column('user_id', Integer, ForeignKey('users.id'), primary_key=True, nullable=False),
     Column('event_id', Integer, ForeignKey('events.id'), primary_key=True, nullable=False),
     Column('pick_id', Integer, ForeignKey('users.id'), nullable=True),
+    Column('created_at', TIMESTAMP, server_default=func.now(), nullable=False),
+    Column('updated_at', TIMESTAMP, server_default=func.now(), onupdate=func.current_timestamp(), nullable=False),
+    Column('deleted_at', TIMESTAMP),
     UniqueConstraint('user_id', 'event_id', name='uix_user_event')
   )
   
@@ -46,3 +50,12 @@ class Event(SQLAlchemyBaseModel, Base):
       min_price=_dict.get("min_price"),
       max_price=_dict.get("max_price")
     )
+    
+  def serialize_event(self) -> dict:
+    event_users = self.users
+    event_owner = self.owner
+    event_data = self.serialize()
+    event_data["owner"] = event_owner.serialize_user()
+    del event_data["owner_id"]
+    event_data["users"] = [user.serialize_user() for user in event_users]
+    return event_data
