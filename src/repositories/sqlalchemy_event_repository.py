@@ -1,5 +1,5 @@
 from .base_repository import SQLAlchemyBaseRepository
-from src.models import Event, User
+from src.models import Event
 
 
 class SQLAlchemyEventsRepository(SQLAlchemyBaseRepository):

@@ -121,7 +121,14 @@ class ManageEventsUsecase:
     return self.get_event_by_id(event_exist.id), None
 
   def get_pick_from_event(self, user_id: int, event_id: int) -> tuple[User|None, str|None]:
+    event = self.get_event_by_id(event_id)
+    if not event:
+      return None, "Event Not Found"
+    if not event.drawn:
+      return None, "Event Not Drawn Yet"
     pick_user = self._event_users_repository.get_pick(user_id, event_id)
     if pick_user:
       return pick_user, None
-    return None, "Usuario No Encontrado"
+    return None, "User Not Found"
+  
+  
