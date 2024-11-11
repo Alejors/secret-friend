@@ -15,6 +15,6 @@ class IDataRepository(ABC):
     pass
   
   @abstractmethod
-  def update(self, original_class: T, data: dict) -> T|None:
+  def update(self, class_id: int, data: dict) -> T|None:
     print("Method Not Implemented")
     pass
