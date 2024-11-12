@@ -135,8 +135,8 @@ def validate_schema_flask(schema: dict, allow_undefined_fields: bool = True):
   def decorator(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
-      json_data = request.get_json()
-      errors = validate_schema(json_data, schema, allow_undefined_fields)
+      data = request.get_json() if request.headers.get('Content-Type') == "application/json" else request.form
+      errors = validate_schema(data, schema, allow_undefined_fields)
 
       if not errors:
           return f(*args, **kwargs)

@@ -11,6 +11,7 @@ def create_flask_app(blueprints, commands: dict):
   jwt = JWTManager(app)
   
   app.config['JWT_SECRET_KEY'] = os.environ.get("JWT_SECRET_KEY")
+  app.config['JWT_TOKEN_LOCATION'] = ['cookies', 'headers']
 
   app.json.sort_keys = False
 

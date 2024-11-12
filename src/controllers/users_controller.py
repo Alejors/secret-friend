@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import url_for, redirect, flash, make_response, Blueprint, request, jsonify
 from flask_jwt_extended import get_jwt_identity, jwt_required
 
 from src.frameworks.validation.validation import validate_schema_flask
@@ -93,25 +93,14 @@ def create_users_controller(users_usecase: ManageUsersUsecase):
   @blueprint.route("/login", methods=["POST"])
   @validate_schema_flask(LOGIN_VALIDATION_SCHEMA)
   def user_login():
-    data = request.get_json()
+    data = request.form
     user, token = users_usecase.user_log_in(data)
     if not user:
-      response = {
-        "code": FAIL_CODE,
-        "message": "Credentials do not Match"
-      }
-      response_code = UNAUTHORIZED
+      flash("Credentials do not Match")
+      return redirect(url_for('frontend.main_view'))
     else:
-      response = {
-        "code": SUCCESS_CODE,
-        "message": "Log in Succesful",
-        "data": {
-          "user": user.serialize_user(),
-          "token": token
-        }
-      }
-      response_code = OK
-    return jsonify(response), response_code
+      response = make_response(redirect(url_for('frontend.home_view')))
+      response.set_cookie('access_token_cookie', token)
+      return response
   
   return blueprint
-    
