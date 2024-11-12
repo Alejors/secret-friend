@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Amigo Secreto: {% block title %}{% endblock title%}</title>
+    <meta name="description" content="App de Amigo Secreto">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{url_for('static', filename='styles/main.css')}}">
+  </head>
+  <body>
+    {% block content %}{% endblock content%}
+  </body>
+</html>

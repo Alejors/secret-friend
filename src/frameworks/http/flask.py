@@ -4,7 +4,9 @@ from flask_jwt_extended import JWTManager
 
 
 def create_flask_app(blueprints, commands: dict):
-  app = Flask(__name__)
+  template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "templates"))
+  static_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "static"))
+  app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
   
   jwt = JWTManager(app)
   

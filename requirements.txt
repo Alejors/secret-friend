@@ -11,3 +11,5 @@ SQLAlchemy-Utils==0.39.0
 
 Flask-JWT-Extended==4.6.0
 Werkzeug>=2.3.3
+
+Jinja2
