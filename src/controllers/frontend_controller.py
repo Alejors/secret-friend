@@ -7,8 +7,8 @@ def create_frontend_controller(users_usecase: ManageUsersUsecase):
   blueprint = Blueprint("frontend", __name__, url_prefix="/s1")
   
   @blueprint.route("/")
-  def main_view():
-    return render_template("main.html")
+  def login_view():
+    return render_template("login.html")
 
   @blueprint.route("/home")
   @jwt_required()
@@ -17,5 +17,9 @@ def create_frontend_controller(users_usecase: ManageUsersUsecase):
     user = users_usecase.get_user_by_id(user_id)
     
     return render_template("home.html", user=user.name)
+  
+  @blueprint.route("/register")
+  def register_view():
+    return render_template("register.html")
   
   return blueprint

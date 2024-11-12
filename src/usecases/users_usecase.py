@@ -25,10 +25,14 @@ class ManageUsersUsecase:
       return None, "Email Already in Use"
     
     # Hasheamos el password entregado
-    data["password"] = hash_password(data["password"])
+    user_data = {
+      "name": data["name"],
+      "email": data["email"],
+      "password": hash_password(data["password"])
+    }
     
     # Creamos un User en base al dict del request
-    user = User.from_dict(data)
+    user = User.from_dict(user_data)
     # Insertamos la entidad y almacenamos en una variable.
     try:
       user_created = self._user_repository.insert(user)

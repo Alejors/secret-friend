@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock title %}
+{% block content %}
+<div class="login_form">
+  <div>
+    {% with messages = get_flashed_messages(with_categories=True) %}
+      {% if messages %}
+        <div class="flash-messages">
+          {% for category, message in messages %}
+            <div class="flash-message {{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+  </div>
+  <form method="POST" action="{{ url_for('users.user_login') }}">
+    <h3>Inicia Sesión</h3>
+    <div class="input_box">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="Ingresa tu Email" required />
+    </div>
+    <div class="input_box">
+      <div class="password_title">
+        <label for="password">Contraseña</label>
+      </div>
+      <input type="password" id="password" name="password" placeholder="Ingresa tu Contraseña" required />
+    </div>
+    <button type="submit">Ingresar</button>
+    <p class="sign_up">No tienes una cuenta? <a href="{{ url_for('frontend.register_view') }}">Registrarse</a></p>
+  </form>
+</div>
+{% endblock content %}

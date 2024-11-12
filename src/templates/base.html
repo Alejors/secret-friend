@@ -7,7 +7,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{url_for('static', filename='styles/main.css')}}">
   </head>
+  {# comment  <nav>#}
+  {#<div>#}
+      {# comment  <div>Home</div>#}
+      {#<div>Perfil</div>#}
+      {#<div>Lista de Deseos</div>#}
+{#      <div>Administrar Sorteos</div>#}
+{#    </div>#}
+{#  </nav> #}
   <body>
     {% block content %}{% endblock content%}
   </body>
+  <script>
+    setTimeout(function() {
+      const flashMessages = document.querySelectorAll('.flash-message');
+      flashMessages.forEach(function(message) {
+        message.style.opacity = '0';
+        setTimeout(function() { message.remove(); }, 500);
+      });
+    }, 3000);
+  </script>
 </html>

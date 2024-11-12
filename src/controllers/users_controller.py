@@ -71,33 +71,25 @@ def create_users_controller(users_usecase: ManageUsersUsecase):
   @blueprint.route("/register", methods=["POST"])
   @validate_schema_flask(REGISTRY_VALIDATION_SCHEMA)
   def register_user():
-    data = request.get_json()
+    data = request.get_json() if request.headers.get('Content-Type') == "application/json" else request.form
     user, error = users_usecase.create_user(data)
     if user:
-      user_data = user.serialize_user()
-      response = {
-          "code": SUCCESS_CODE,
-          "message": "User Created",
-          "data": user_data
-        }
-      response_code = CREATED
+      flash("Registro Exitoso!", "success")
+      return redirect(url_for('frontend.login_view'))
     else:
-      response = {
-          "code": FAIL_CODE,
-          "message": f"Error Creating User: {error}"
-        }
-      response_code = BAD_REQUEST
+      flash(f"Se Produjo un Error: {error}", "error")
+      return redirect(url_for('frontend.register_view'))
       
     return jsonify(response), response_code
   
   @blueprint.route("/login", methods=["POST"])
   @validate_schema_flask(LOGIN_VALIDATION_SCHEMA)
   def user_login():
-    data = request.form
+    data = request.get_json() if request.headers.get('Content-Type') == "application/json" else request.form
     user, token = users_usecase.user_log_in(data)
     if not user:
-      flash("Credentials do not Match")
-      return redirect(url_for('frontend.main_view'))
+      flash("Las Credenciales No Coinciden", "error")
+      return redirect(url_for('frontend.login_view'))
     else:
       response = make_response(redirect(url_for('frontend.home_view')))
       response.set_cookie('access_token_cookie', token)

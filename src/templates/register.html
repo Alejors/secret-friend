@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Registro{% endblock title %}
+{% block content %}
+<div class="login_form">
+  <form method="POST" action="{{ url_for('users.register_user') }}">
+    <h3>Regístrate</h3>
+    <div class="input_box">
+      <label for="name">Nombre</label>
+      <input type="text" id="name" name="name" placeholder="Nino..." required />
+    </div>
+    <div class="input_box">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="Ingresa tu Email" required />
+    </div>
+    <div class="input_box">
+      <div class="password_title">
+        <label for="password" title="Debe tener entre 8 y 12 caracteres, al menos una mayúscula y al menos 1 número!">Contraseña</label>
+      </div>
+      <input type="password" id="password" name="password" placeholder="Contraseña..." required />
+    </div>
+    <button type="submit">Registrarse</button>
+  </form>
+</div>
+{% endblock content %}
