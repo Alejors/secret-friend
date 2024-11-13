@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Administrar Eventos{% endblock title %}
+{% block styles%}
+{% include 'css_html.html' %}
+{% endblock styles %}
+{% block content %}
+  <div>
+    <label for="events">Eventos Propios:</label>
+    <select name="events" id="events">
+    {% if events %}
+      {% for event in events %}
+      <option value="{{event.id}}">{{event.name}}</option>
+      {% endfor %}
+    {% else %}
+      <option disabled>--No hay Eventos--</option>
+    {% endif %}
+    </select>
+  </div>
+  <div class="d-flex">
+
+  </div>
+{% endblock content%}

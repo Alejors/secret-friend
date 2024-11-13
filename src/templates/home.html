@@ -1,14 +1,66 @@
 {% extends "base.html" %}
 {% block title %}Home{% endblock title %}
+{% block styles%}
+{% include 'css_html.html' %}
+{% endblock styles %}
 {% block content %}
 <div>
   <div>
-    <h1>Welcome!</h1>
+    <h1>Bienvenido, <strong>{{ user.name }}</strong>!</h1>
   </div>
   </br>
-  <div>
-    <p>Querido {{ user }}</p>
-    <p> un placer tenerte aquí</p>
+  <div class="d-flex justify-between">
+    <div>
+      <label for="events">Eventos:</label>
+      <select name="events" id="events">
+      {% if events %}
+        {% for event in events %}
+        <option value="{{event.id}}">{{event.name}}</option>
+        {% endfor %}
+      {% else %}
+        <option disabled>--No hay Eventos--</option>
+      {% endif %}
+      </select>
+    </div>
+    <div class="me-25">
+      {% if event_pick %}
+        <p>Tu Amigo Secreto para {{current_event.name}} es:</p>
+        <h1>{{event_pick.name}}</h1>
+      {% else %}
+        <p> El concurso aún no se lanza </p>
+      {% endif %}
+      {% if wishlist %}
+      <table>
+        <tr>
+          <th>Descripción</th>
+          <th>Ejemplo</th>
+        </tr>
+      {% for wish in wishlist %}
+        <tr>
+          <td>{{wish.element}}</td>
+          <td>{{wish.url}}</td>
+        </tr>
+      {% endfor %}
+        {% if current_event.min_price%}
+        <small> Te recordamos que el valor mínimo del regalo es: {{current_event.min_price}}
+        {% endif %}
+        {% if current_event.max_price%}
+        <small> Te recordamos que el valor máximo del regalo es: {{current_event.max_price}}
+        {% endif %}
+      {% endif %}
+      {% if pick_error%}
+        <h3>Ups: {{pick_error}}</h3>
+      {% endif %}
+    </div>
   </div>
 </div>
+<script>
+  const selectElement = document.getElementById("events");
+  selectElement.addEventListener("change", function () {
+    const selectedValue = selectElement.value;
+    if (selectedValue) {
+      window.location.href = {{url_for('frontend.home_view', stylesheet=url_for('static', filename='styles/home.css'), event_id=selectedValue)}}`;
+    }
+  });
+</script>
 {% endblock content %}
