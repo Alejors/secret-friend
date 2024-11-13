@@ -26,14 +26,14 @@ class ManageEventsUsecase:
   def _get_event(self, filters: dict) -> Event|None:
     return self._events_repository.get(filters=filters, first_only=True)
   
-  def _get_events(self, filters: dict) -> Event|None:
+  def _get_events(self, filters: dict) -> list[Event|None]:
     return self._events_repository.get(filters=filters)
   
   def get_event_by_id(self, id: int) -> Event|None:
     filters = {"id": id}
     return self._get_event(filters)
   
-  def get_events_by_owner_id(self, owner_id: int) -> Event|None:
+  def get_events_by_owner_id(self, owner_id: int) -> list[Event]:
     filters = {"owner_id": owner_id}
     return self._get_events(filters=filters)
   
@@ -163,15 +163,16 @@ class ManageEventsUsecase:
   def get_pick_from_event(self, user_id: int, event_id: int) -> tuple[User|None, list[Wish]|None, str|None]:
     event = self.get_event_by_id(event_id)
     if not event:
-      return None, None, "Event Not Found"
+      return None, None, "Evento no encontrado"
     if user_id not in [participant.id for participant in event.users]:
-      return None, None, "User Not in Event"
+      return None, None, "Este usuario no está en este evento"
     if not event.drawn:
-      return None, None, "Event Not Drawn Yet"
+      return None, None, "El evento no se ha sorteado aún"
     pick_user = self._event_users_repository.get_pick(user_id, event_id)
     if pick_user:
       wishlist = self._wishlist_usecase.get_wishlist_by_user_and_event(pick_user.id, event.id)
       return pick_user, wishlist, None
-    return None, None, "User Not Found"
+    return None, None, "Usuario no encontrado"
   
-  
+  def get_events_by_user_id(self, user_id: int) -> list[Event]:
+    return self._event_users_repository.get_events_by_participant(user_id)

@@ -6,6 +6,21 @@ from src.models import User, Event
 class SQLAlchemyEventUsersRepository:
   def __init__(self, sqlalchemy_client):
     self.session_factory = sqlalchemy_client.session_factory
+  
+  def get_events_by_participant(self, user_id: int) -> list[Event]:
+    with self.session_factory() as session:
+      query = (
+        select(Event)
+        .join(Event.event_users, Event.event_users.c.event_id == Event.id)
+        .where(
+          and_(
+            Event.event_users.c.user_id == user_id,
+            Event.event_users.c.deleted_at == None
+          )
+        )
+      )
+      result = list(session.execute(query).scalars().unique())
+      return result
     
   def get_pick(self, user_id: int, event_id: int) -> User|None:
     with self.session_factory() as session:

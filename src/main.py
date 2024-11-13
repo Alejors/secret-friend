@@ -46,7 +46,7 @@ blueprints = [
     create_users_controller(users_usecase),
     create_events_controller(events_usecase),
     create_wishlist_controller(wishlist_usecase),
-    create_frontend_controller(users_usecase),
+    create_frontend_controller(users_usecase, events_usecase),
 ]
 
 commands = {
