@@ -5,18 +5,26 @@
     <title>Amigo Secreto: {% block title %}{% endblock title%}</title>
     <meta name="description" content="App de Amigo Secreto">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{{url_for('static', filename='styles/main.css')}}">
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+      * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+          font-family: "Montserrat", sans-serif;
+      }
+    {% block styles %}
+      {% include 'css_login.html' %}  
+    {% endblock %}
+    </style>
   </head>
-  {# comment  <nav>#}
-  {#<div>#}
-      {# comment  <div>Home</div>#}
-      {#<div>Perfil</div>#}
-      {#<div>Lista de Deseos</div>#}
-{#      <div>Administrar Sorteos</div>#}
-{#    </div>#}
-{#  </nav> #}
+  {% if request.path != '/s1/'%}
+    {% include 'nav.html'%}
+  {% endif %}
   <body>
-    {% block content %}{% endblock content%}
+    <div class="container">
+    {% block content %}Aquí no hay nada :o{% endblock content%}
+    </div>
   </body>
   <script>
     setTimeout(function() {
