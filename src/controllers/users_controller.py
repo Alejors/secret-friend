@@ -79,8 +79,6 @@ def create_users_controller(users_usecase: ManageUsersUsecase):
     else:
       flash(f"Se Produjo un Error: {error}", "error")
       return redirect(url_for('frontend.register_view'))
-      
-    return jsonify(response), response_code
   
   @blueprint.route("/login", methods=["POST"])
   @validate_schema_flask(LOGIN_VALIDATION_SCHEMA)
@@ -94,5 +92,12 @@ def create_users_controller(users_usecase: ManageUsersUsecase):
       response = make_response(redirect(url_for('frontend.home_view')))
       response.set_cookie('access_token_cookie', token)
       return response
+  
+  @blueprint.route("/logout")
+  def user_logout():
+    response = redirect(url_for('frontend.login_view'))
+    response.delete_cookie('access_token_cookie')
+    
+    return response
   
   return blueprint
