@@ -12,6 +12,7 @@ def create_flask_app(blueprints, commands: dict):
   
   app.config['JWT_SECRET_KEY'] = os.environ.get("JWT_SECRET_KEY")
   app.config['JWT_TOKEN_LOCATION'] = ['cookies', 'headers']
+  app.config['JWT_COOKIE_CSRF_PROTECT'] = True
   app.config['DEBUG'] = True # DEV
   app.config['TEMPLATES_AUTO_RELOAD'] = True # DEV
   app.secret_key = os.environ.get("FLASK_SECRET_KEY")

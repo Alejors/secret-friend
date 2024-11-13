@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, redirect, url_for, flash
 from flask_jwt_extended import get_jwt_identity, jwt_required
 
 from src.frameworks.validation.validation import validate_schema_flask
@@ -126,7 +126,7 @@ def create_events_controller(events_usecase: ManageEventsUsecase):
         
       return jsonify(response), status_code
   
-  @blueprint.route("/draw-event", methods=["POST"])
+  @blueprint.route("/draw-event", methods=["GET"])
   @jwt_required()
   def draw_event():
     user_id = int(get_jwt_identity())
@@ -139,18 +139,12 @@ def create_events_controller(events_usecase: ManageEventsUsecase):
       status_code = BAD_REQUEST
     else:
       drawn, error = events_usecase.draw_event(user_id, event_id)
-      if not drawn:
-        response = {
-          "code": FAIL_CODE,
-          "message": error
-        }
-        status_code = INTERNAL_SERVER_ERROR
+      if drawn:
+        flash("Sorteo Realizado!", "success")
+        return redirect(url_for("frontend.home_view"))
       else:
-        response = {
-          "code": SUCCESS_CODE,
-          "message": "Event Drawn"
-        }
-        status_code = OK
+        flash(error, "error")
+        return redirect(url_for("frontend.events_view"))
               
     return jsonify(response), status_code
   return blueprint

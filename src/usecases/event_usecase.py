@@ -128,9 +128,9 @@ class ManageEventsUsecase:
   def draw_event(self, user_id: int, event_id: int) -> tuple[bool, str|None]:
     event = self.get_by_owner_id_and_event_id(user_id, event_id)
     if not event:
-      return False, "No Event Matches Owner and ID"
+      return False, "Este evento no le pertenece a este usuario."
     if event.drawn:
-      return False, "Event Already Drawn"
+      return False, "El evento ya fue sorteado!"
     # listamos todos los participantes del concurso
     event_participants_ids = [participant.id for participant in event.users]
     # realizamos una copia que iremos modificando
@@ -158,7 +158,7 @@ class ManageEventsUsecase:
       remove_pick = {"pick_id": None}
       for participant in event_participants_ids:
         self._event_users_repository.update_participation(participant, event.id, remove_pick)
-      return False, f"Rolledback. An Error Ocurred: {str(e)}"
+      return False, f"Se retrocede. Ocurrió un error: {str(e)}"
 
   def get_pick_from_event(self, user_id: int, event_id: int) -> tuple[User|None, list[Wish]|None, str|None]:
     event = self.get_event_by_id(event_id)

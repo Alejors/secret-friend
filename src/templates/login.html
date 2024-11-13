@@ -2,17 +2,6 @@
 {% block title %}Login{% endblock title %}
 {% block content %}
 <div class="login_form">
-  <div>
-    {% with messages = get_flashed_messages(with_categories=True) %}
-      {% if messages %}
-        <div class="flash-messages">
-          {% for category, message in messages %}
-            <div class="flash-message {{ category }}">{{ message }}</div>
-          {% endfor %}
-        </div>
-      {% endif %}
-    {% endwith %}
-  </div>
   <form method="POST" action="{{ url_for('users.user_login') }}">
     <h3>Inicia Sesión</h3>
     <div class="input_box">

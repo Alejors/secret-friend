@@ -1,5 +1,7 @@
+import os
+
 from flask import url_for, redirect, flash, make_response, Blueprint, request, jsonify
-from flask_jwt_extended import get_jwt_identity, jwt_required
+from flask_jwt_extended import get_jwt_identity, jwt_required, get_csrf_token
 
 from src.frameworks.validation.validation import validate_schema_flask
 from src.frameworks.validation.schemas import REGISTRY_VALIDATION_SCHEMA, LOGIN_VALIDATION_SCHEMA
@@ -90,7 +92,8 @@ def create_users_controller(users_usecase: ManageUsersUsecase):
       return redirect(url_for('frontend.login_view'))
     else:
       response = make_response(redirect(url_for('frontend.home_view')))
-      response.set_cookie('access_token_cookie', token)
+      response.set_cookie('access_token_cookie', token, httponly=True, secure=os.environ.get("ENVIRONMENT")!="local")
+      response.set_cookie('csrf_access_token', get_csrf_token(token), httponly=True, secure=os.environ.get("ENVIRONMENT")!="local")
       return response
   
   @blueprint.route("/logout")
