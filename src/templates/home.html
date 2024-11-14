@@ -21,32 +21,46 @@
         <option disabled>--No hay Eventos--</option>
       {% endif %}
       </select>
-    </div>
-    <div class="me-25">
-      {% if event_pick %}
-        <p>Tu Amigo Secreto para {{current_event.name}} es:</p>
-        <h1>{{event_pick.name}}</h1>
-      {% else %}
-        <p> El concurso aún no se lanza </p>
+      <br/>
+      <br/>
+      {% if current_event.min_price or current_event.max_price %}
+      <div style="background: #FFFFFF80; padding: 10px; border: 2px black solid;">
+        <span>Te recordamos que:</span>
+        <ul class="ms-5">
+          <br/>
+          {% if current_event.min_price%}
+          <li>el valor <strong>mínimo</strong> del regalo es: <strong>${{current_event.min_price}}</strong></li>
+          <br/>
+          {% endif %}
+          {% if current_event.max_price%}
+          <li>el valor <strong>máximo</strong> del regalo es: <strong>${{current_event.max_price}}</strong></li>
+          {% endif %}
+        </ul>
+      </div>
       {% endif %}
+    </div>
+    {% if event_pick %}
+    <div class="d-flex align-center">
+      <p>Tu Amigo Secreto para {{current_event.name}} es:&nbsp;&nbsp;</p>
+      <h1>{{event_pick.name}}</h1>
+    </div>
+    <div class="me-25">   
       {% if wishlist %}
       <table>
         <tr>
           <th>Descripción</th>
-          <th>Ejemplo</th>
+          <th>Imagen de Referencia</th>
         </tr>
-      {% for wish in wishlist %}
+        {% for wish in wishlist %}
         <tr>
           <td>{{wish.element}}</td>
-          <td>{{wish.url}}</td>
+          <td><img class="wishlist" src="{{wish.url}}" alt="{{wish.element}}"></td>
         </tr>
-      {% endfor %}
-        {% if current_event.min_price%}
-        <small> Te recordamos que el valor mínimo del regalo es: {{current_event.min_price}}
-        {% endif %}
-        {% if current_event.max_price%}
-        <small> Te recordamos que el valor máximo del regalo es: {{current_event.max_price}}
-        {% endif %}
+        {% endfor %}
+      </table>
+      {% endif %}
+      {% else %}
+        <p> El concurso aún no se lanza </p>
       {% endif %}
       {% if pick_error%}
         <h3>Ups: {{pick_error}}</h3>
