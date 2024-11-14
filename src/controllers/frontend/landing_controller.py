@@ -22,7 +22,7 @@ def create_landing_controller(users_usecase: ManageUsersUsecase):
       else:
         response = make_response(redirect(url_for('home.home_view')))
         response.set_cookie('access_token_cookie', token, httponly=True, secure=os.environ.get("ENVIRONMENT")!="local")
-        response.set_cookie('csrf_access_token', get_csrf_token(token), httponly=True, secure=os.environ.get("ENVIRONMENT")!="local")
+        response.set_cookie('csrf_token', get_csrf_token(token), httponly=True, secure=os.environ.get("ENVIRONMENT")!="local")
         return response
     return render_template("login.html", form=form)
   

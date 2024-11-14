@@ -23,6 +23,7 @@ from src.controllers import (
     create_landing_controller,
     create_home_controller,
     create_frontevent_controller,
+    create_profile_controller,
 )
 
 
@@ -51,6 +52,7 @@ blueprints = [
     create_landing_controller(users_usecase),
     create_home_controller(users_usecase, events_usecase),
     create_frontevent_controller(events_usecase),
+    create_profile_controller(users_usecase),
 ]
 
 commands = {

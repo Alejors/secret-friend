@@ -11,33 +11,28 @@
   </br>
   <div class="d-flex justify-between">
     <div>
-      <label for="events">Eventos:</label>
-      <select name="events" id="events">
-      {% if events %}
-        {% for event in events %}
-        <option value="{{event.id}}">{{event.name}}</option>
-        {% endfor %}
-      {% else %}
-        <option disabled>--No hay Eventos--</option>
-      {% endif %}
-      </select>
-      <br/>
-      <br/>
-      {% if current_event.min_price or current_event.max_price %}
-      <div style="background: #FFFFFF80; padding: 10px; border: 2px black solid;">
-        <span>Te recordamos que:</span>
-        <ul class="ms-5">
-          <br/>
-          {% if current_event.min_price%}
-          <li>el valor <strong>mínimo</strong> del regalo es: <strong>${{current_event.min_price}}</strong></li>
-          <br/>
-          {% endif %}
-          {% if current_event.max_price%}
-          <li>el valor <strong>máximo</strong> del regalo es: <strong>${{current_event.max_price}}</strong></li>
-          {% endif %}
-        </ul>
+      <div class="d-flex justify-evenly">
+        {{ form.events.label }} {{ form.events }}  
       </div>
-      {% endif %}
+        <br/>
+        <br/>
+      <div>
+        {% if current_event.min_price or current_event.max_price %}
+        <div class="white-seethrough p-1" style="border: 2px black solid;">
+          <span>Te recordamos que:</span>
+          <ul class="ms-5">
+            <br/>
+            {% if current_event.min_price%}
+            <li>el valor <strong>mínimo</strong> del regalo es: <strong>${{current_event.min_price}}</strong></li>
+            <br/>
+            {% endif %}
+            {% if current_event.max_price%}
+            <li>el valor <strong>máximo</strong> del regalo es: <strong>${{current_event.max_price}}</strong></li>
+            {% endif %}
+          </ul>
+        </div>
+        {% endif %}
+      </div>
     </div>
     {% if event_pick %}
     <div class="d-flex align-center">
@@ -46,15 +41,15 @@
     </div>
     <div class="me-25">   
       {% if wishlist %}
-      <table>
+      <table class="white-seethrough" >
         <tr>
           <th>Descripción</th>
           <th>Imagen de Referencia</th>
         </tr>
         {% for wish in wishlist %}
         <tr>
-          <td>{{wish.element}}</td>
-          <td><img class="wishlist" src="{{wish.url}}" alt="{{wish.element}}"></td>
+          <td class="p-1">{{wish.element}}</td>
+          <td class="p-1"><img class="wishlist" src="{{wish.url}}" alt="{{wish.element}}"></td>
         </tr>
         {% endfor %}
       </table>

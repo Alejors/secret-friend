@@ -5,3 +5,4 @@ from .backend.wishlist_controller import create_wishlist_controller
 from .frontend.landing_controller import create_landing_controller
 from .frontend.home_controller import create_home_controller
 from .frontend.event_controller import create_frontevent_controller
+from .frontend.profile_controller import create_profile_controller
