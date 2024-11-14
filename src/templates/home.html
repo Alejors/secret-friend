@@ -73,7 +73,7 @@
   selectElement.addEventListener("change", function () {
     const selectedValue = selectElement.value;
     if (selectedValue) {
-      window.location.href = {{url_for('frontend.home_view', stylesheet=url_for('static', filename='styles/home.css'), event_id=selectedValue)}}`;
+      window.location.href = {{url_for('frontend.home_view', event_id=selectedValue)}}`;
     }
   });
 </script>

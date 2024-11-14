@@ -22,26 +22,48 @@
       <div class="ms-5">
         <h3>Listado de Participantes:</h3>
         <br/>
-        <ul>
-          {% for participant in current_event.users %}
-            <li>{{participant.name}}</li>
-          {% endfor %}
-        </ul>
+        <form action="*************" method="PUT">
+          <label for="name">Nombre:</label>
+          <input type="text" id="name" name="name" value={{current_event.name}}>
+          <label for="min_price">Precio Mínimo:</label>
+          <input type="number" id="min_price" name="min_price" min=0 value={{current_event.min_price|default(0)}}>
+          <label for="max_price">Precio Máximo:</label>
+          <input type="number" id="max_price" name="max_price" min=0 value={{current_event.max_price|default(0)}}>
+          <fieldset id="users_fieldset" class="p-1">
+            <legend>Participantes</legend>
+            <button type="button" id="add_user_button" class="plus_button">+</button>
+            {% if current_event.users|length > 0 %}
+            {% for participant in current_event.users %}
+            <div id="user{{loop.index-1}}" class="user d-flex justify-evenly mb-5">
+              <div>
+                <label for="user{{loop.index-1}}_name">Nombre:</label>
+                <input type="text" id="user{{loop.index-1}}_name" name="users[{{loop.index-1}}][name]" value="{{participant.name}}">
+              </div>
+              <div>
+                <label for="user{{loop.index-1}}_email">Email:</label>
+                <input type="email" id="user{{loop.index-1}}_email" name="users[{{loop.index-1}}][email]" value="{{participant.email}}">
+              </div>
+              <button type="button" class="eliminar" data-id="user{{loop.index-1}}">Eliminar</button>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div id="user{{counter}}" class="user d-flex justify-evenly mb-5">
+              <div>
+                <label for="user{{counter}}_name">Nombre:</label>
+                <input type="text" id="user{{counter}}_name" name="users[{{counter}}][name]">
+              </div>
+              <div>
+                <label for="user{{counter}}_email">Email:</label>
+                <input type="email" id="user{{counter}}_email" name="users[{{counter}}][email]">
+              </div>
+              <button type="button" class="eliminar" data-id="user{{counter}}">Eliminar</button>
+            </div>
+            {% endif %}
+          </fieldset>
+          <br/>
+          <button type="submit">Actualizar</button>
+        </form>
       </div>
-      {% if current_event.min_price or current_event.max_price %}
-      <div>
-        {% if current_event.min_price %}
-        <div>
-          <p>El precio <strong>mínimo</strong> configurado es: ${{current_event.min_price}}</p>
-        </div>
-        {% endif %}
-        {% if current_event.max_price %}
-        <div>
-          <p>El precio <strong>máximo</strong> configurado es: ${{current_event.max_price}}</p>
-        </div>
-        {% endif %}
-      </div>
-      {% endif %}
       <div>
         {% if not current_event.drawn %}
         <a href="{{ url_for('events.draw_event', event_id=event_selected)}}">
@@ -53,4 +75,66 @@
       </div>
     </div>
   {% endif %}
+  <script>
+    const fieldset = document.getElementById('users_fieldset');
+    const lastChild = fieldset.lastElementChild;
+    let id = lastChild.id;
+    let userCount = parseInt(id.replace("user", "")) + 1;
+    document.getElementById('add_user_button').addEventListener('click', function() {
+      const newUserDiv = document.createElement('div');
+      newUserDiv.classList.add('user', 'd-flex', 'justify-evenly', 'mb-5');
+      newUserDiv.id = `user${userCount}`;
+      const nameDiv = document.createElement('div');
+      const nameLabel = document.createElement('label');
+      nameLabel.setAttribute('for', `user${userCount}_name`);
+      nameLabel.textContent = 'Nombre:';
+      const nameInput = document.createElement('input');
+      nameInput.type = 'text';
+      nameInput.id = `user${userCount}_name`;
+      nameInput.name = `users[${userCount}][name]`;
+      nameInput.required = true;
+      nameDiv.appendChild(nameLabel);
+      nameDiv.appendChild(nameInput);
+
+      const emailDiv = document.createElement('div');
+      const emailLabel = document.createElement('label');
+      emailLabel.setAttribute('for', `user${userCount}_email`);
+      emailLabel.textContent = 'Email:';
+      const emailInput = document.createElement('input');
+      emailInput.type = 'email';
+      emailInput.id = `user${userCount}_email`;
+      emailInput.name = `users[${userCount}][email]`;
+      emailInput.required = true;
+      emailDiv.appendChild(emailLabel);
+      emailDiv.appendChild(emailInput);
+      
+      const deleteButton = document.createElement('button');
+      deleteButton.type = 'button';
+      deleteButton.classList.add('eliminar');
+      deleteButton.setAttribute('data-id', `user${userCount}`);
+      deleteButton.textContent = 'Eliminar';
+
+      deleteButton.addEventListener('click', function() {
+        const userId = deleteButton.getAttribute('data-id');
+        const userElement = document.getElementById(userId);
+        userElement.remove();
+      });
+
+      newUserDiv.appendChild(nameDiv);
+      newUserDiv.appendChild(emailDiv);
+      newUserDiv.appendChild(deleteButton);
+
+      const fieldset = document.getElementById('users_fieldset');
+      fieldset.appendChild(newUserDiv);
+      userCount++;
+    });
+
+    document.querySelectorAll('.eliminar').forEach(function(button) {
+      button.addEventListener('click', function() {
+          const itemId = this.getAttribute('data-id');
+          const item = document.getElementById(itemId);
+          item.remove();
+      });
+  });
+  </script>
 {% endblock content%}

@@ -70,7 +70,7 @@ def create_events_controller(events_usecase: ManageEventsUsecase):
       }
       status_code = BAD_REQUEST
     else:
-      data = request.get_json()
+      data = request.get_json() if request.headers.get("Content-Type") == "application/json" else request.form
       event, error = events_usecase.update_event(user_id, event_id, data)
       if event:
         event_data = event.serialize_event()
