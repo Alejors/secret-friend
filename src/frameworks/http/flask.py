@@ -1,5 +1,6 @@
 import os
 from flask import Flask
+from flask_wtf.csrf import CSRFProtect
 from flask_jwt_extended import JWTManager
 
 
@@ -17,6 +18,8 @@ def create_flask_app(blueprints, commands: dict):
   app.config['TEMPLATES_AUTO_RELOAD'] = True # DEV
   app.secret_key = os.environ.get("FLASK_SECRET_KEY")
 
+  csrf = CSRFProtect(app)
+  
   app.json.sort_keys = False
 
   for blueprint in blueprints:

@@ -20,7 +20,9 @@ from src.controllers import (
     create_healthcheck,
     create_events_controller,
     create_wishlist_controller,
-    create_frontend_controller,
+    create_landing_controller,
+    create_home_controller,
+    create_frontevent_controller,
 )
 
 
@@ -46,7 +48,9 @@ blueprints = [
     create_users_controller(users_usecase),
     create_events_controller(events_usecase),
     create_wishlist_controller(wishlist_usecase),
-    create_frontend_controller(users_usecase, events_usecase),
+    create_landing_controller(users_usecase),
+    create_home_controller(users_usecase, events_usecase),
+    create_frontevent_controller(events_usecase),
 ]
 
 commands = {

@@ -1,19 +1,19 @@
 <nav style="background-color: #333; padding: 10px;">
   <ul style="list-style-type: none; margin: 0; padding: 0; display: flex; justify-content: space-around;">
     <li style="display: inline;">
-      <a href="{{url_for("frontend.home_view")}}" style="color: white; text-decoration: none; padding: 10px 20px; display: block;">Home</a>
+      <a href="{{url_for("home.home_view")}}" style="color: white; text-decoration: none; padding: 10px 20px; display: block;">Home</a>
     </li>
     <li style="display: inline;">
-      <a href="{{url_for("frontend.profile_view")}}" style="color: white; text-decoration: none; padding: 10px 20px; display: block;">Perfil</a>
+      <a href="{{url_for("home.profile_view")}}" style="color: white; text-decoration: none; padding: 10px 20px; display: block;">Perfil</a>
     </li>
     <li style="display: inline;">
-      <a href="{{url_for("frontend.wishlist_view")}}" style="color: white; text-decoration: none; padding: 10px 20px; display: block;">Lista de Deseos</a>
+      <a href="{{url_for("home.wishlist_view")}}" style="color: white; text-decoration: none; padding: 10px 20px; display: block;">Lista de Deseos</a>
     </li>
     <li style="display: inline;">
-      <a href="{{url_for("frontend.events_view")}}" style="color: white; text-decoration: none; padding: 10px 20px; display: block;">Administrar Concursos</a>
+      <a href="{{url_for("frontevent.events_view")}}" style="color: white; text-decoration: none; padding: 10px 20px; display: block;">Administrar Concursos</a>
     </li>
     <li style="display: inline; background-color: red; border-radius: 25px;">
-      <a href="{{url_for("users.user_logout")}}" style="color: white; text-decoration: none; padding: 10px 20px; display: block;">Cerrar Sesión</a>
+      <a href="{{url_for("landing.user_logout")}}" style="color: white; text-decoration: none; padding: 10px 20px; display: block;">Cerrar Sesión</a>
     </li>
   </ul>
 </nav>
