@@ -13,9 +13,8 @@
       <div class="ms-5">
         <h3>Listado de Participantes:</h3>
         <br/>
-        <form action="{{url_for("frontevent.events_view")}}" method="POST">
+        <form id="eventForm" action="{{url_for("frontevent.events_view", event_id=current_event.id)}}" method="POST">
           {{ form.hidden_tag() }}
-          {{ form.csrf_token() }}
           {{ form.name.label }} {{ form.name }}
           {{ form.min_price.label }} {{ form.min_price }}
           {{ form.max_price.label }} {{ form.max_price }}
