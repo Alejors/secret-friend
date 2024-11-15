@@ -18,7 +18,7 @@ def create_flask_app(blueprints, commands: dict):
   app.secret_key = os.environ.get("FLASK_SECRET_KEY")
 
   jwt = JWTManager(app)
-  csrf = CSRFProtect(app)
+  # csrf = CSRFProtect(app)
   
   app.json.sort_keys = False
 
