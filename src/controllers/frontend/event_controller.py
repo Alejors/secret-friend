@@ -25,6 +25,7 @@ def create_frontevent_controller(events_usecase: ManageEventsUsecase):
       if error:
         flash(error, "error")
         return redirect(url_for("frontevent.events_view", event_id=event_selected))
+      flash("Evento Actualizado", "success")
       return redirect(url_for("home.home_view"))
     
     events = events_usecase.get_events_by_owner_id(user_id)

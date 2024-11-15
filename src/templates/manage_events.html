@@ -20,6 +20,18 @@
           {{ form.max_price.label }} {{ form.max_price }}
           {{ form.submit }}
         </form>
+        {% if form.errors %}
+        <br/>
+        {% for key, errors in form.errors.items() %}
+        <strong>{{ key | replace("min_price", "Precio Mínimo") | replace("max_price", "Precio Máximo") | replace("name", "Nombre") }}</strong>
+        <ul class="errors">
+          {% for error in errors %}
+          <li> {{ error }}</li>
+          {% endfor %}
+        </ul>
+        {% endfor %}
+        <br/>
+        {% endif %}
       </div>
       <div>
         {% if not current_event.drawn %}
