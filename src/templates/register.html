@@ -8,15 +8,39 @@
     <div class="input_box">
       {{ form.name.label }} {{ form.name }}
     </div>
+    {% if form.name.errors %}
+      <ul class="errors">
+      {% for error in form.name.errors %}
+        <li>{{ error }}</li>
+      {% endfor %}
+      </ul>
+      <br/>
+    {% endif %}
     <div class="input_box">
       {{ form.email.label }} {{ form.email }}
     </div>
+    {% if form.email.errors %}
+      <ul class="errors">
+      {% for error in form.email.errors %}
+        <li>{{ error }}</li>
+      {% endfor %}
+      </ul>
+      <br/>
+    {% endif %}
     <div class="input_box">
       <div class="password_title">
         {{ form.password.label }}
       </div>
       {{ form.password }}
     </div>
+    {% if form.password.errors %}
+      <ul class="errors">
+      {% for error in form.password.errors %}
+        <li>{{ error }}</li>
+      {% endfor %}
+      </ul>
+      <br/>
+    {% endif %}
     {{ form.submit }}
   </form>
   <p class="sign_up">Ya tienes una cuenta? <a href="{{ url_for('landing.login_view') }}">Inicia Sesión</a></p>
