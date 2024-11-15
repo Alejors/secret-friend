@@ -1,3 +1,4 @@
+import re
 from flask import url_for, redirect, flash, render_template, Blueprint, request
 from flask_jwt_extended import get_jwt_identity, jwt_required
 
@@ -16,10 +17,24 @@ def create_frontevent_controller(events_usecase: ManageEventsUsecase):
     event_selected = int(request.args.get("event_id")) if request.args.get("event_id") else None
     if request.method == "POST" and form.validate():
       data = request.form
+      users_dict = {}
+      regex = r'users\[(\d+)\]\[(\w+)\]'
+      for key, value in data.items():
+        if match := re.search(regex, key):
+          index = int(match.group(1))
+          field = match.group(2)
+          
+          if index not in users_dict:
+            users_dict[index] = {}
+          
+          users_dict[index][field] = value
+      users = [value for _, value in users_dict.items()]
+      
       event_data = {
         "name": data.get("name"),
         "min_price": data.get("min_price"),
-        "max_price": data.get("max_price")
+        "max_price": data.get("max_price"),
+        "users": users
       }
       _, error = events_usecase.update_event(user_id, event_selected, event_data)
       if error:

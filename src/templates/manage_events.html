@@ -14,10 +14,45 @@
         <h3>Listado de Participantes:</h3>
         <br/>
         <form id="eventForm" action="{{url_for("frontevent.events_view", event_id=current_event.id)}}" method="POST">
+          <div>
           {{ form.hidden_tag() }}
           {{ form.name.label }} {{ form.name }}
           {{ form.min_price.label }} {{ form.min_price }}
           {{ form.max_price.label }} {{ form.max_price }}
+          </div>
+          <div>
+            <fieldset id="users_fieldset" class="p-1">
+              <legend>Participantes</legend>
+              <button type="button" id="add_user_button" class="plus_button">+</button>
+              {% if current_event.users|length > 0 %}
+              {% for participant in current_event.users %}
+              <div id="user{{loop.index-1}}" class="user d-flex justify-evenly mb-5">
+                <div>
+                  <label for="user{{loop.index-1}}_name">Nombre:</label>
+                  <input type="text" id="user{{loop.index-1}}_name" name="users[{{loop.index-1}}][name]" value="{{participant.name}}">
+                </div>
+                <div>
+                  <label for="user{{loop.index-1}}_email">Email:</label>
+                  <input type="email" id="user{{loop.index-1}}_email" name="users[{{loop.index-1}}][email]" value="{{participant.email}}">
+                </div>
+                <button type="button" class="eliminar" data-id="user{{loop.index-1}}">Eliminar</button>
+              </div>
+              {% endfor %}
+              {% else %}
+              <div id="user{{counter}}" class="user d-flex justify-evenly mb-5">
+                <div>
+                  <label for="user{{counter}}_name">Nombre:</label>
+                  <input type="text" id="user{{counter}}_name" name="users[{{counter}}][name]">
+                </div>
+                <div>
+                  <label for="user{{counter}}_email">Email:</label>
+                  <input type="email" id="user{{counter}}_email" name="users[{{counter}}][email]">
+                </div>
+                <button type="button" class="eliminar" data-id="user{{counter}}">Eliminar</button>
+              </div>
+              {% endif %}
+            </fieldset>
+          </div>
           {{ form.submit }}
         </form>
         {% if form.errors %}
