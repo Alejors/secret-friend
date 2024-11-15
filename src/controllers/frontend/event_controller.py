@@ -2,7 +2,7 @@ from flask import url_for, redirect, flash, render_template, Blueprint, request
 from flask_jwt_extended import get_jwt_identity, jwt_required
 
 from src.usecases import ManageEventsUsecase
-from src.templates.forms import EventSelector, EventForm, ParticipantForm
+from src.templates.forms import EventSelector, EventForm
 
 
 def create_frontevent_controller(events_usecase: ManageEventsUsecase):
@@ -13,12 +13,22 @@ def create_frontevent_controller(events_usecase: ManageEventsUsecase):
   def events_view():
     user_id = int(get_jwt_identity())
     form = EventForm()
+    event_selected = int(request.args.get("event_id")) if request.args.get("event_id") else None
     if request.method == "POST" and form.validate():
       data = request.form
-      return "ok"
+      event_data = {
+        "name": data.get("name"),
+        "min_price": data.get("min_price"),
+        "max_price": data.get("max_price")
+      }
+      _, error = events_usecase.update_event(user_id, event_selected, event_data)
+      if error:
+        flash(error, "error")
+        return redirect(url_for("frontevent.events_view", event_id=event_selected))
+      return redirect(url_for("home.home_view"))
     
     events = events_usecase.get_events_by_owner_id(user_id)
-    event_selected = int(request.args.get("event_id")) if request.args.get("event_id") else None
+    
     if len(events) > 0:
       if not event_selected:
         current_event = events[0]
@@ -34,14 +44,14 @@ def create_frontevent_controller(events_usecase: ManageEventsUsecase):
       form.name.data = current_event.name
       form.min_price.data = current_event.min_price
       form.max_price.data = current_event.max_price
-
+    
     return render_template(
       "manage_events.html", 
       events=events, 
       event_selected=event_selected,
       current_event=current_event,
       select_form=select,
-      form=form
+      form=form,
     )
   
   @blueprint.route("/remove", methods=["POST"])
@@ -64,9 +74,9 @@ def create_frontevent_controller(events_usecase: ManageEventsUsecase):
       
     if drawn:
       flash("Sorteo Realizado!", "success")
-      return redirect(url_for("frontend.home_view"))
+      return redirect(url_for("home.home_view"))
     else:
       flash(error, "error")
-      return redirect(url_for("frontend.events_view"))
+      return redirect(url_for("frontevents.events_view"))
   
   return blueprint
