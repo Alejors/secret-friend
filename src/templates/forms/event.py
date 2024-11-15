@@ -21,5 +21,6 @@ class EventForm(FlaskForm):
       return False
     if self.min_price and self.max_price:
       if self.min_price.data > self.max_price.data:
+        self.min_price.errors.append("El precio mínimo no puede ser mayor que el precio máximo!")
         return False
     return True
