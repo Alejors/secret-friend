@@ -23,7 +23,9 @@
           <div>
             <fieldset id="users_fieldset" class="p-1">
               <legend>Participantes</legend>
+              {% if not current_event.drawn %}
               <button type="button" id="add_user_button" class="plus_button">+</button>
+              {% endif %}
               {% if current_event.users|length > 0 %}
               {% for participant in current_event.users %}
               <div id="user{{loop.index-1}}" class="user d-flex justify-evenly mb-5">
@@ -35,7 +37,9 @@
                   <label for="user{{loop.index-1}}_email">Email:</label>
                   <input type="email" id="user{{loop.index-1}}_email" name="users[{{loop.index-1}}][email]" value="{{participant.email}}">
                 </div>
+                {% if not current_event.drawn %}
                 <button type="button" class="eliminar" data-id="user{{loop.index-1}}">Eliminar</button>
+                {% endif %}
               </div>
               {% endfor %}
               {% else %}
@@ -48,12 +52,19 @@
                   <label for="user{{counter}}_email">Email:</label>
                   <input type="email" id="user{{counter}}_email" name="users[{{counter}}][email]">
                 </div>
+                {% if not current_event.drawn %}
                 <button type="button" class="eliminar" data-id="user{{counter}}">Eliminar</button>
+                {% endif %}
               </div>
               {% endif %}
             </fieldset>
           </div>
+          <br/>
+          {% if not current_event.drawn %}
           {{ form.submit }}
+          {% else %}
+          <strong style="color: white;">Este evento ya fue sorteado.<br/> No puede actualizarse!</strong>
+          {% endif %}
         </form>
         {% if form.errors %}
         <br/>
@@ -74,7 +85,7 @@
           <button type="button" class="me-5 event">Realizar Sorteo!</button>
         </a>
         {% else %}
-        <h1>Este evento ya se sorteó</h1>
+        <h1 class="me-5">Este evento ya se sorteó</h1>
         {% endif %}
       </div>
     </div>
