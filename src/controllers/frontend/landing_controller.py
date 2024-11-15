@@ -1,8 +1,7 @@
 import os
 
 from flask import url_for, redirect, flash, render_template, Blueprint, request, make_response
-from flask_jwt_extended import get_csrf_token
-
+from flask_jwt_extended import get_csrf_token, set_access_cookies
 from src.usecases import ManageUsersUsecase
 from src.templates.forms import LoginForm, RegistryForm
 
@@ -21,8 +20,7 @@ def create_landing_controller(users_usecase: ManageUsersUsecase):
         return redirect(url_for('landing.login_view'))
       else:
         response = make_response(redirect(url_for('home.home_view')))
-        response.set_cookie('access_token_cookie', token, httponly=True, secure=os.environ.get("ENVIRONMENT")!="local")
-        response.set_cookie('csrf_token', get_csrf_token(token), httponly=True, secure=os.environ.get("ENVIRONMENT")!="local")
+        set_access_cookies(response, token)
         return response
     return render_template("login.html", form=form)
   
