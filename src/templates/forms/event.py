@@ -20,6 +20,6 @@ class EventForm(FlaskForm):
     if not FlaskForm.validate(self):
       return False
     if self.min_price and self.max_price:
-      if self.min_price > self.max_price:
+      if self.min_price.data > self.max_price.data:
         return False
     return True
