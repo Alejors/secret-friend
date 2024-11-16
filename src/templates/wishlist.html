@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Listas de Deseos{% endblock title %}
+{% block styles%}
+{% include 'css_html.html' %}
+{% endblock styles %}
+{% block content %}
+<div class="container d-flex">
+  <div class="col-6">
+    <h1>Mis Concursos</h1>
+    <br/>
+    <ul>
+      {% for event in events %}
+      <li><a href="{{url_for("frontend_wishlist.wishlist_view", event_id=event.id)}}">{{ event.name }}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div class="col-6">
+    <h1>Mis Listas de Deseos</h1>
+    <br/>
+    <form action="" id="wishlistForm" method="POST">
+      <table>
+        <tr>
+          <th>Idea de Regalo</th>
+          <th> URL de Imagen </th>
+          <th>Imagen de Ejemplo</th>
+        </tr>
+        {% for item in wishlist_form.items %}
+        <tr>
+          <td class="p-1">{{ item.element(size=20)}}</td>
+          <td class="p-1">{{ item.url }}<br/><span>o<br/></span><label for="{{loop.index}}file">Sube una imagen:<br/><input type="file" name="{{loop.index}}file"></td>
+          <td class="p-1">{% if item.url.data %}<img class="wishlist" src="{{ item.url.data }}" alt="{{ item.element.data }}"/>{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </table>
+      {{ wishlist_form.submit }}
+    </form>
+  </div>
+</div>
+{% endblock content %}
