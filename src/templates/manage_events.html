@@ -98,7 +98,7 @@
   <div>
     {% if current_event %}
       {% if not current_event.drawn %}
-      <a href="{{ url_for('events.draw_event', event_id=event_selected)}}">
+      <a href="{{ url_for('frontevent.draw_event', event_id=event_selected)}}">
         <button type="button" class="me-5 event purple">Realizar Sorteo!</button>
       </a>
       {% else %}
