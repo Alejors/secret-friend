@@ -16,7 +16,7 @@ class ManageWishlistUsecase:
     filter = {"user_id": user_id, "element": element, "event_id": event_id}
     return self._wishlist_repository.get(filters=filter, first_only=True)
   
-  def create_wishes(self, user_id: int, data: dict) -> tuple[list[Wish]|None, str|None]:
+  def create_or_update_wishes(self, user_id: int, data: dict) -> tuple[list[Wish]|None, str|None]:
     event_id = data["event_id"]
     wishes = data["wishes"]
     try:
