@@ -69,13 +69,7 @@ def create_frontevent_controller(events_usecase: ManageEventsUsecase):
       select_form=select,
       form=form,
     )
-  
-  @blueprint.route("/remove", methods=["POST"])
-  @jwt_required()
-  def remove_participant():
-    user_id = int(get_jwt_identity())
-    pass
-  
+
   @blueprint.route("/draw-event", methods=["GET"])
   @jwt_required()
   def draw_event():
