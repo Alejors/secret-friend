@@ -1,4 +1,4 @@
 from .login import LoginForm
 from .registry import RegistryForm
-from .event import EventSelector, EventForm, ParticipantForm
+from .event import EventForm
 from .profile import ProfileForm

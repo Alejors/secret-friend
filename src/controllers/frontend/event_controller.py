@@ -3,7 +3,7 @@ from flask import url_for, redirect, flash, render_template, Blueprint, request
 from flask_jwt_extended import get_jwt_identity, jwt_required
 
 from src.usecases import ManageEventsUsecase
-from src.templates.forms import EventSelector, EventForm
+from src.templates.forms import EventForm
 
 
 def create_frontevent_controller(events_usecase: ManageEventsUsecase):
@@ -32,29 +32,31 @@ def create_frontevent_controller(events_usecase: ManageEventsUsecase):
       
       event_data = {
         "name": data.get("name"),
-        "min_price": data.get("min_price"),
-        "max_price": data.get("max_price"),
+        "min_price": int(data.get("min_price")) if data.get("min_price") else None,
+        "max_price": int(data.get("max_price")) if data.get("max_price") else None,
         "users": users
       }
-      _, error = events_usecase.update_event(user_id, event_selected, event_data)
+      if len(users) < 3:
+        error = "Se requiere al menos 3 participantes para un evento!"
+      else:
+        if event_selected:
+          _, error = events_usecase.update_event(user_id, event_selected, event_data)
+          flash("Evento Actualizado", "success")
+        else:
+          event_data["owner_id"] = user_id
+          _, error = events_usecase.create_event(event_data)
+          flash("Evento Creado", "success")
       if error:
         flash(error, "error")
         return redirect(url_for("frontevent.events_view", event_id=event_selected))
-      flash("Evento Actualizado", "success")
       return redirect(url_for("home.home_view"))
     
     events = events_usecase.get_events_by_owner_id(user_id)
     
-    if len(events) > 0:
-      if not event_selected:
-        current_event = events[0]
-        event_selected = current_event.id
-      else:
-        current_event = next(event for event in events if event.id == event_selected)
+    if event_selected:
+      current_event = next(event for event in events if event.id == event_selected)
     else:
-      event_selected = current_event = None
-    select = EventSelector()
-    select.events.choices = [(event.id, event.name) for event in events]
+      current_event = None
     
     if current_event:
       form.name.data = current_event.name
@@ -62,11 +64,10 @@ def create_frontevent_controller(events_usecase: ManageEventsUsecase):
       form.max_price.data = current_event.max_price
     
     return render_template(
-      "manage_events.html", 
-      events=events, 
+      "manage_events.html",
       event_selected=event_selected,
       current_event=current_event,
-      select_form=select,
+      events=events,
       form=form,
     )
 
