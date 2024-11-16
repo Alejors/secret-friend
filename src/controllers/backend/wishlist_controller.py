@@ -20,7 +20,7 @@ def create_wishlist_controller(wishlist_usecase: ManageWishlistUsecase):
   def create_wishlist():
     data = request.get_json()
     user_id = int(get_jwt_identity())
-    wishlist, errors = wishlist_usecase.create_wishes(user_id, data)
+    wishlist, errors = wishlist_usecase.create_or_update_wishes(user_id, data)
     if wishlist:
       response = {
         "code": SUCCESS_CODE,

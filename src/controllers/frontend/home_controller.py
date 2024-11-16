@@ -25,7 +25,6 @@ def create_home_controller(users_usecase: ManageUsersUsecase, events_usecase: Ma
       event_pick = wishlist = None
       pick_error = "Crea un Evento Para Comenzar!"
       current_event = None
-    #TODO: crear listado a partir de eventos
     
     return render_template(
       "home.html", 
@@ -36,9 +35,5 @@ def create_home_controller(users_usecase: ManageUsersUsecase, events_usecase: Ma
       wishlist=wishlist, 
       pick_error=pick_error,
     )
-  
-  @blueprint.route("/wishlist")
-  def wishlist_view():
-    return "OK"
   
   return blueprint
