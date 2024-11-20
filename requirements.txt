@@ -13,3 +13,4 @@ flask-wtf[email]
 Werkzeug>=2.3.3
 
 Jinja2
+requests
