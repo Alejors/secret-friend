@@ -2,7 +2,7 @@ from datetime import datetime
 
 from src.models import Wish
 from src.interfaces import IDataRepository
-from frameworks.bucket.client import BucketClient
+from src.frameworks.bucket.client import BucketClient
 
 
 class ManageWishlistUsecase:
