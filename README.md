@@ -88,3 +88,9 @@ Esto correrá los scripts SQL definidos en el comando:
 La contraseña definida para los usuarios de prueba es Hola1234, considerando que se use el *JWT_SECRET_KEY* **MyM3g45up3r53cr3tK3y!**. 
 
 *nota*: por favor no usar este secret key en ambientes productivos.
+
+## Uso de S3Ninja
+
+El servicio S3 Ninja es un emulador de AWS S3. Este contenedor se carga como parte de docker-compose. Las credenciales para conectarse se encuentran dentro de su UI, que se puede encontrar en http://localhost:<S3_PORT>.
+
+Se creó un volumen para la persistencia de la data que se sube.

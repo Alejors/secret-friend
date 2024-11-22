@@ -27,7 +27,7 @@ class BucketClient:
     bucket = bucket_name or self._bucket
     try:
       self._client.upload_fileobj(file.stream, bucket, object_name, ExtraArgs={"ACL": "public-read"})
-      return f"{self.url}/{bucket}/{object_name}?noAuth=true"
+      return f"{self.url.replace("ninja", "localhost")}/{bucket}/{object_name}?noAuth=true" # AJUSTAR ANTES DE DESPLEGAR
     except Exception as e:
       print(f"An error occurred: {e}")
       return None

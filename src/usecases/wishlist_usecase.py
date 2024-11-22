@@ -47,7 +47,6 @@ class ManageWishlistUsecase:
           else:
             self._wishlist_repository.insert(wish)
         else:
-          print(element)
           self._wishlist_repository.update(wish_exists.id, element)
       new_wishes_names = list(map(lambda wish: wish["element"], wishes))
       wishes_to_remove = list(filter(lambda wish: wish.element not in new_wishes_names, current_wishlist))
