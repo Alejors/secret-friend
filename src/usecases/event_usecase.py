@@ -6,8 +6,9 @@ from sqlalchemy.exc import IntegrityError
 from src.models import Event, User, Wish
 from src.interfaces import IDataRepository
 from src.usecases import ManageUsersUsecase
-from src.usecases.wishlist_usecase import ManageWishlistUsecase
+from src.frameworks.mail.client import MailingClient
 from src.repositories import SQLAlchemyEventUsersRepository
+from src.usecases.wishlist_usecase import ManageWishlistUsecase
 
 
 class ManageEventsUsecase:
@@ -17,11 +18,13 @@ class ManageEventsUsecase:
     event_user_repository: SQLAlchemyEventUsersRepository,
     users_usecase: ManageUsersUsecase,
     wishlist_usecase: ManageWishlistUsecase,
+    mailing_client: MailingClient,
   ):
     self._event_users_repository = event_user_repository
     self._events_repository = events_repository
     self._users_usecase = users_usecase
     self._wishlist_usecase = wishlist_usecase
+    self._mailing_client = mailing_client
     
   def _get_event(self, filters: dict) -> Event|None:
     return self._events_repository.get(filters=filters, first_only=True)
@@ -152,6 +155,17 @@ class ManageEventsUsecase:
         # quitamos este elemento de la lista de los no escogidos aún
         not_picked_participants.remove(pick)
       self._events_repository.update(event.id, {"drawn": True})
+      for participant in event_participants_ids:
+        current_participant = next(user for user in event.users if user.id == participant)
+        picked_user, wishlist, error = self.get_pick_from_event(current_participant.id, event.id)
+        if not error:
+          body = f"Se realizó el sorteo de {event.name}!\nTu amigo secreto es: {picked_user.name}!"
+          if wishlist:
+            wishlist_elements = ', '.join([f'<a href={item.url}>{item.element}</a>' for item in wishlist])
+            body = body + f"\nAlgunas ideas de regalo son: {wishlist_elements}"
+          self._mailing_client.send_mail(current_participant.email, f"Tu amigo secreto para: {event.name}", body)
+        else:
+          print(error)
       return True, None
     # Si falla cualquier update, tenemos que eliminar cualquier update que alcanzó a hacerse
     except Exception as e:

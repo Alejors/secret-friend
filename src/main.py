@@ -2,6 +2,7 @@ from src.frameworks.db.seeds.commands import seed
 from src.frameworks.http.flask import create_flask_app
 from src.frameworks.db.sqlalchemy import SQLAlchemyClient
 from src.frameworks.bucket.client import BucketClient
+from src.frameworks.mail.client import MailingClient
 
 from src.repositories import (
     SQLAlchemyUsersRepository,
@@ -32,6 +33,7 @@ from src.controllers import (
 # Clients
 sqlalchemy_client = SQLAlchemyClient()
 bucket_client = BucketClient()
+mailing_client = MailingClient()
 
 # Repositories
 sqlalchemy_user_repository = SQLAlchemyUsersRepository(sqlalchemy_client)
@@ -47,6 +49,7 @@ events_usecase = ManageEventsUsecase(
     sqlalchemy_event_user_repository, 
     users_usecase,
     wishlist_usecase,
+    mailing_client,
 )
 
 blueprints = [
