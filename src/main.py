@@ -43,7 +43,13 @@ sqlalchemy_event_user_repository = SQLAlchemyEventUsersRepository(sqlalchemy_cli
 
 # Usecases
 users_usecase = ManageUsersUsecase(sqlalchemy_user_repository)
-wishlist_usecase = ManageWishlistUsecase(sqlalchemy_wishlist_repository, bucket_client)
+wishlist_usecase = ManageWishlistUsecase(
+    sqlalchemy_wishlist_repository, 
+    sqlalchemy_event_repository,
+    sqlalchemy_event_user_repository,
+    bucket_client,
+    mailing_client,
+)
 events_usecase = ManageEventsUsecase(
     sqlalchemy_event_repository, 
     sqlalchemy_event_user_repository, 

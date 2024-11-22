@@ -161,7 +161,7 @@ class ManageEventsUsecase:
         if not error:
           body = f"Se realizó el sorteo de {event.name}!\nTu amigo secreto es: {picked_user.name}!"
           if wishlist:
-            wishlist_elements = ', '.join([f'<a href={item.url}>{item.element}</a>' for item in wishlist])
+            wishlist_elements = ', '.join([f'<a href={item.url}>{item.element}</a>' for item in wishlist if item.element is not None])
             body = body + f"\nAlgunas ideas de regalo son: {wishlist_elements}"
           self._mailing_client.send_mail(current_participant.email, f"Tu amigo secreto para: {event.name}", body)
         else:
