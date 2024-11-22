@@ -1,7 +1,7 @@
 from src.frameworks.db.seeds.commands import seed
 from src.frameworks.http.flask import create_flask_app
 from src.frameworks.db.sqlalchemy import SQLAlchemyClient
-from src.frameworks.bucket.bucket import BucketClient
+from frameworks.bucket.client import BucketClient
 
 from src.repositories import (
     SQLAlchemyUsersRepository,
