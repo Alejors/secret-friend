@@ -31,16 +31,24 @@ class ManageWishlistUsecase:
       for element in wishes:
         element["user_id"] = user_id
         element["event_id"] = event_id
-        if element["image"]:
-          self._bucket_client.upload_file(element['image'], user_id)
+        image_file = element.pop("image", None)
+        if image_file:
+          url = self._bucket_client.upload_file(image_file, user_id)
+          if url:
+            element["url"] = url
+          else:
+            raise FileExistsError("Unable to Upload File")
         wish = Wish.from_dict(element)
+        wish_exists = self.get_wish_by_user_element_and_event(user_id, event_id, wish.element)
         if wish.element not in wish_names:
-          removed_wish = self.get_wish_by_user_element_and_event(user_id, event_id, wish.element)
-          if removed_wish and removed_wish.deleted_at is not None:
-            renewal = {"deleted_at": None}
-            self._wishlist_repository.update(removed_wish.id, renewal)
+          if wish_exists and wish_exists.deleted_at is not None:
+            renewal = element.update({"deleted_at": None})
+            self._wishlist_repository.update(wish_exists.id, renewal)
           else:
             self._wishlist_repository.insert(wish)
+        else:
+          print(element)
+          self._wishlist_repository.update(wish_exists.id, element)
       new_wishes_names = list(map(lambda wish: wish["element"], wishes))
       wishes_to_remove = list(filter(lambda wish: wish.element not in new_wishes_names, current_wishlist))
       for wish_to_remove in wishes_to_remove:

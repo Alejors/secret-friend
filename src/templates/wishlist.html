@@ -30,7 +30,7 @@
           <td class="p-1">{{ item.element(size=20)}}</td>
           <td class="p-1">{{ item.image.label }} {{ item.image }}<br/><span>o<br/></span>{{item.url.label}} {{ item.url }}</td>
           <td class="p-1">
-            {% if item.url.data and item.url.data | regex_match('\.(jpg|jpeg|png|webp|avif|gif)$')%}
+            {% if item.url.data and item.url.data | regex_match('\.(jpg|jpeg|png|webp|avif|gif)(\?.*)?$')%}
             <img class="wishlist" src="{{ item.url.data }}" alt="{{ item.element.data }}"/>
             {% elif item.url.data %}
             <a href="{{ item.url.data }}" target="_blank">Ejemplo de: {{item.element.data}}</a>
