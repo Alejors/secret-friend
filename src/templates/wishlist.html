@@ -17,18 +17,25 @@
   <div class="col-6">
     <h1>Mis Listas de Deseos</h1>
     <br/>
-    <form action="" id="wishlistForm" method="POST">
+    <form action="{{ url_for("frontend_wishlist.wishlist_view", event_id=event_selected) }}" id="wishlistForm" method="POST" enctype="multipart/form-data">
+      {{ wishlist_form.hidden_tag() }}
       <table>
         <tr>
           <th>Idea de Regalo</th>
-          <th> URL de Imagen </th>
-          <th>Imagen de Ejemplo</th>
+          <th> URL de Ejemplo </th>
+          <th>Ejemplo</th>
         </tr>
         {% for item in wishlist_form.items %}
         <tr>
           <td class="p-1">{{ item.element(size=20)}}</td>
-          <td class="p-1">{{ item.url }}<br/><span>o<br/></span><label for="{{loop.index}}file">Sube una imagen:<br/><input type="file" name="{{loop.index}}file"></td>
-          <td class="p-1">{% if item.url.data %}<img class="wishlist" src="{{ item.url.data }}" alt="{{ item.element.data }}"/>{% endif %}</td>
+          <td class="p-1">{{ item.image.label }} {{ item.image }}<br/><span>o<br/></span>{{item.url.label}} {{ item.url }}</td>
+          <td class="p-1">
+            {% if item.url.data and item.url.data | regex_match('\.(jpg|jpeg|png|webp|avif|gif)$')%}
+            <img class="wishlist" src="{{ item.url.data }}" alt="{{ item.element.data }}"/>
+            {% elif item.url.data %}
+            <a href="{{ item.url.data }}" target="_blank">Ejemplo de: {{item.element.data}}</a>
+            {% endif %}
+          </td>
         </tr>
         {% endfor %}
       </table>

@@ -1,6 +1,9 @@
 import os
 from flask import Flask
+from jinja2 import Environment
 from flask_jwt_extended import JWTManager
+
+from src.frameworks.jinja.custom_filters import custom_methods
 
 
 def create_flask_app(blueprints, commands: dict):
@@ -16,6 +19,12 @@ def create_flask_app(blueprints, commands: dict):
   app.config['WTF_CSRF_ENABLED'] = True
   app.config["JWT_COOKIE_SECURE"] = False
   app.secret_key = os.environ.get("JWT_SECRET_KEY")
+
+  jinja_env = Environment()
+  for filter, method in custom_methods.items():
+    jinja_env.filters[filter] = method
+
+  app.jinja_env.filters.update(jinja_env.filters)
 
   jwt = JWTManager(app)
 
