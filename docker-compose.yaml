@@ -18,17 +18,15 @@ services:
       - backend
 
   ninja:
-    container_name: s3-ninja
-    image: scireum/s3-ninja:6
-    restart: always
+    image: kcomlabs/s3ninja
+    ports:
+      - "${S3_PORT}:9444"
     
     environment:
       - BUCKET_NAME=${BUCKET_NAME}
-    ports:
-      - ${S3_PORT}:9000
 
     volumes:
-      - ./src/frameworks/bucket/:/home/sirius/data
+      - ./src/frameworks/bucket/documents/:/home/sirius/data
 
     networks:
       - backend

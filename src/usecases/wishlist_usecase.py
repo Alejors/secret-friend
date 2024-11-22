@@ -2,11 +2,17 @@ from datetime import datetime
 
 from src.models import Wish
 from src.interfaces import IDataRepository
+from src.frameworks.bucket.bucket import BucketClient
 
 
 class ManageWishlistUsecase:
-  def __init__(self, wishlist_repository: IDataRepository):
+  def __init__(
+    self, 
+    wishlist_repository: IDataRepository,
+    bucket_client: BucketClient,
+  ):
     self._wishlist_repository = wishlist_repository
+    self._bucket_client = bucket_client
   
   def get_wishlist_by_user_and_event(self, user_id: int, event_id: int) -> list[Wish]:
     filter = {"user_id": user_id, "event_id": event_id, "deleted_at": None}
@@ -25,6 +31,8 @@ class ManageWishlistUsecase:
       for element in wishes:
         element["user_id"] = user_id
         element["event_id"] = event_id
+        if element["image"]:
+          self._bucket_client.upload_file(element['image'], user_id)
         wish = Wish.from_dict(element)
         if wish.element not in wish_names:
           removed_wish = self.get_wish_by_user_element_and_event(user_id, event_id, wish.element)
