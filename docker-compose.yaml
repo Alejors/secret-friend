@@ -17,6 +17,22 @@ services:
     networks:
       - backend
 
+  ninja:
+    container_name: s3-ninja
+    image: scireum/s3-ninja:6
+    restart: always
+    
+    environment:
+      - BUCKET_NAME=${BUCKET_NAME}
+    ports:
+      - ${S3_PORT}:9000
+
+    volumes:
+      - ./src/frameworks/bucket/:/home/sirius/data
+
+    networks:
+      - backend
+
   api:
     build: .
     container_name: ${DOCKER_SERVICE_NAME}
