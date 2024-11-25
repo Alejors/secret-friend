@@ -14,6 +14,7 @@
       {% endfor %}
     </ul>
   </div>
+  {% if event_selected %}
   <div class="col-6">
     <h1>Mis Listas de Deseos</h1>
     <br/>
@@ -42,5 +43,6 @@
       {{ wishlist_form.submit }}
     </form>
   </div>
+  {% endif %}
 </div>
 {% endblock content %}
