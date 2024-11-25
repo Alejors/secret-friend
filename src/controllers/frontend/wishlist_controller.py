@@ -31,15 +31,16 @@ def create_frontend_wishlist_controller(wishlists_usecase: ManageWishlistUsecase
             wishes_dict[index] = {}
           
           wishes_dict[index][field] = value
-      for key, value in request_files.items():
-        if match := re.search(regex, key):
-          index = int(match.group(1))
-          field = match.group(2)
-          
-          if index not in wishes_dict:
-            wishes_dict[index] = {}
-          
-          wishes_dict[index][field] = value
+      if request_files:
+        for key, value in request_files.items():
+          if match := re.search(regex, key):
+            index = int(match.group(1))
+            field = match.group(2)
+            
+            if index not in wishes_dict:
+              wishes_dict[index] = {}
+            
+            wishes_dict[index][field] = value
 
       wishes = [value for _, value in wishes_dict.items() if value]
 
@@ -55,7 +56,6 @@ def create_frontend_wishlist_controller(wishlists_usecase: ManageWishlistUsecase
       else:
         flash(f"Lista Actualizada", "success")
       return redirect(url_for("frontend_wishlist.wishlist_view", event_id=event_selected))
-    #TODO: armar flujo POST, evaluar agrega un filefield al form para recibir un archivo para cargar a cloudinary.
     if event_selected:
       wishlist = wishlists_usecase.get_wishlist_by_user_and_event(user_id, event_selected)
       title = next(event.name for event in events if event.id == event_selected)

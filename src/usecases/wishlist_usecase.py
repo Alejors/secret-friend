@@ -47,6 +47,8 @@ class ManageWishlistUsecase:
       current_wishlist = self.get_wishlist_by_user_and_event(user_id, current_event.id)
       wish_names = [wish.element for wish in current_wishlist if wish]
       for element in wishes:
+        if element["element"] is None or element["element"] == "":
+          continue
         element["user_id"] = user_id
         element["event_id"] = current_event.id
         image_file = element.pop("image", None)
@@ -76,11 +78,21 @@ class ManageWishlistUsecase:
       if current_event.drawn:
         # MANDAR MAIL DE QUE SE ACTUALIZO LISTA DE DESEOS
         user_who_picked = self.get_who_picked(user_id, current_event.id)
-        wishlist_elements = ', '.join([f'<a href={item.url}>{item.element}</a>' for item in updated_wishlist if item.element is not None])
-        body = f"""Hola, {user_who_picked.name}!
-Tu amigo secreto actualizó su lista de deseos!
-Aquí tienes ideas para regalarle: {wishlist_elements}."""
+        wishlist_elements = ''.join([f'<li><a href={item.url}>{item.element}</a></li>' for item in updated_wishlist if item.element is not None])
+        body = f"""
+        <html>
+          <body>
+            <h1>Hola, {user_who_picked.name}!</h1>
+            <p>Tu amigo secreto actualizó su <b>lista de deseos</b>!</p>
+            <p>Aquí tienes ideas para regalarle:</p> 
+            <ul>{wishlist_elements}</ul>
+            <br/>
+            <p>saludos!</p>
+          </body>
+        </html>"""
+        self._mailing_client.login()
         self._mailing_client.send_mail(user_who_picked.email, "Lista de Deseos Actualizada!", body)
+        self._mailing_client.logout()
       return updated_wishlist, None
     except Exception as e:
       return None, str(e)

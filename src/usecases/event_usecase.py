@@ -159,10 +159,16 @@ class ManageEventsUsecase:
         current_participant = next(user for user in event.users if user.id == participant)
         picked_user, wishlist, error = self.get_pick_from_event(current_participant.id, event.id)
         if not error:
-          body = f"Se realizó el sorteo de {event.name}!\nTu amigo secreto es: {picked_user.name}!"
+          body = f"""
+        <html>
+          <body>
+            <h1>Hola!</h1>
+            <p>Se realizó el sorteo de <b>{event.name}</b>!</p>
+            <p>Tu amigo secreto es: {picked_user.name}!</p> """
           if wishlist:
-            wishlist_elements = ', '.join([f'<a href={item.url}>{item.element}</a>' for item in wishlist if item.element is not None])
-            body = body + f"\nAlgunas ideas de regalo son: {wishlist_elements}"
+            wishlist_elements = ''.join([f'<li><a href={item.url}>{item.element}</a></li>' for item in wishlist if item.element is not None])
+            body = body + f"<br/><p>Algunas ideas de regalo son:</p><ul>{wishlist_elements}</ul>"
+          body = body + "<br/><p>Saludos!</p></body></html>"
           self._mailing_client.send_mail(current_participant.email, f"Tu amigo secreto para: {event.name}", body)
         else:
           print(error)
