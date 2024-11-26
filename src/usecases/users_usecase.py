@@ -41,7 +41,7 @@ class ManageUsersUsecase:
     
     return self.get_user_by_id(user_created.id), None
   
-  def update_user(self, user_id: int, data: dict) -> User:
+  def update_user(self, user_id: int, data: dict) -> tuple[User|None, str|None]:
     user_exists = self.get_user_by_id(user_id)
     if not user_exists:
       return None, "User Not Found"
@@ -50,7 +50,6 @@ class ManageUsersUsecase:
         data["password"] = hash_password(data["password"])
       user_updated = self._user_repository.update(user_id, data)  
       return user_updated, None
-    
     except Exception as e:
       return None, str(e)
   

@@ -1,6 +1,8 @@
 from src.frameworks.db.seeds.commands import seed
 from src.frameworks.http.flask import create_flask_app
 from src.frameworks.db.sqlalchemy import SQLAlchemyClient
+from src.frameworks.bucket.client import BucketClient
+from src.frameworks.mail.client import MailingClient
 
 from src.repositories import (
     SQLAlchemyUsersRepository,
@@ -24,11 +26,16 @@ from src.controllers import (
     create_home_controller,
     create_frontevent_controller,
     create_profile_controller,
+    create_frontend_wishlist_controller,
 )
 
 
-# Repositories
+# Clients
 sqlalchemy_client = SQLAlchemyClient()
+bucket_client = BucketClient()
+mailing_client = MailingClient()
+
+# Repositories
 sqlalchemy_user_repository = SQLAlchemyUsersRepository(sqlalchemy_client)
 sqlalchemy_event_repository = SQLAlchemyEventsRepository(sqlalchemy_client)
 sqlalchemy_wishlist_repository = SQLAlchemyWishlistRepository(sqlalchemy_client)
@@ -36,12 +43,19 @@ sqlalchemy_event_user_repository = SQLAlchemyEventUsersRepository(sqlalchemy_cli
 
 # Usecases
 users_usecase = ManageUsersUsecase(sqlalchemy_user_repository)
-wishlist_usecase = ManageWishlistUsecase(sqlalchemy_wishlist_repository)
+wishlist_usecase = ManageWishlistUsecase(
+    sqlalchemy_wishlist_repository, 
+    sqlalchemy_event_repository,
+    sqlalchemy_event_user_repository,
+    bucket_client,
+    mailing_client,
+)
 events_usecase = ManageEventsUsecase(
     sqlalchemy_event_repository, 
     sqlalchemy_event_user_repository, 
     users_usecase,
     wishlist_usecase,
+    mailing_client,
 )
 
 blueprints = [
@@ -53,6 +67,7 @@ blueprints = [
     create_home_controller(users_usecase, events_usecase),
     create_frontevent_controller(events_usecase),
     create_profile_controller(users_usecase),
+    create_frontend_wishlist_controller(wishlist_usecase, events_usecase),
 ]
 
 commands = {

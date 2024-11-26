@@ -1,8 +1,7 @@
-from flask import url_for, redirect, flash, render_template, Blueprint, request
+from flask import render_template, Blueprint, request
 from flask_jwt_extended import get_jwt_identity, jwt_required
 
 from src.usecases import ManageUsersUsecase, ManageEventsUsecase
-from src.templates.forms import EventSelector
 
 
 def create_home_controller(users_usecase: ManageUsersUsecase, events_usecase: ManageEventsUsecase):
@@ -25,8 +24,7 @@ def create_home_controller(users_usecase: ManageUsersUsecase, events_usecase: Ma
     else:
       event_pick = wishlist = None
       pick_error = "Crea un Evento Para Comenzar!"
-    form = EventSelector()
-    form.events.choices = [(event.id, event.name) for event in events]
+      current_event = None
     
     return render_template(
       "home.html", 
@@ -36,11 +34,6 @@ def create_home_controller(users_usecase: ManageUsersUsecase, events_usecase: Ma
       event_pick=event_pick, 
       wishlist=wishlist, 
       pick_error=pick_error,
-      form=form
     )
-  
-  @blueprint.route("/wishlist")
-  def wishlist_view():
-    return "OK"
   
   return blueprint

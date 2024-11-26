@@ -36,6 +36,21 @@ class SQLAlchemyEventUsersRepository:
       )
       result = session.execute(query).first()
       return result[0] if result else None
+ 
+  def get_who_picked_id(self, user_id: int, event_id: int) -> User|None:
+    with self.session_factory() as session:
+      query = (
+        select(User)
+        .join(Event.event_users, Event.event_users.c.user_id == User.id)
+        .where(
+          and_(
+            Event.event_users.c.event_id == event_id,
+            Event.event_users.c.pick_id == user_id
+          )
+        )
+      )
+      result = session.execute(query).first()
+      return result[0] if result else None
     
   def insert_participant(self, user_id: int, event_id: int):
     with self.session_factory() as session:

@@ -23,7 +23,7 @@ def upgrade():
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('event_id', sa.Integer(), nullable=False),
     sa.Column('element', sa.String(length=50), nullable=False),
-    sa.Column('url', sa.String(length=250), nullable=True),
+    sa.Column('url', sa.String(length=512), nullable=True),
     sa.Column('created_at', sa.TIMESTAMP(), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.TIMESTAMP(), server_default=sa.text('now()'), nullable=False),
     sa.Column('deleted_at', sa.TIMESTAMP(), nullable=True),
