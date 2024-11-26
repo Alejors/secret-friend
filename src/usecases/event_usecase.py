@@ -155,6 +155,7 @@ class ManageEventsUsecase:
         # quitamos este elemento de la lista de los no escogidos aún
         not_picked_participants.remove(pick)
       self._events_repository.update(event.id, {"drawn": True})
+      self._mailing_client.login()
       for participant in event_participants_ids:
         current_participant = next(user for user in event.users if user.id == participant)
         picked_user, wishlist, error = self.get_pick_from_event(current_participant.id, event.id)
@@ -172,6 +173,7 @@ class ManageEventsUsecase:
           self._mailing_client.send_mail(current_participant.email, f"Tu amigo secreto para: {event.name}", body)
         else:
           print(error)
+      self._mailing_client.logout()
       return True, None
     # Si falla cualquier update, tenemos que eliminar cualquier update que alcanzó a hacerse
     except Exception as e:

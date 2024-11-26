@@ -53,7 +53,7 @@ class ManageWishlistUsecase:
         element["event_id"] = current_event.id
         image_file = element.pop("image", None)
         if image_file:
-          url = self._bucket_client.upload_file(image_file, user_id)
+          url = self._bucket_client.upload_file(image_file, user_id, str(current_event.id))
           if url:
             element["url"] = url
           else:

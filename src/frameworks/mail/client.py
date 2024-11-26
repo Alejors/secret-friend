@@ -17,7 +17,6 @@ class MailingClient:
     self._server.quit()
   
   def send_mail(self, recipient: str, subject: str, body: str):
-    print(f"Sending mail to {recipient}, about {subject}, saying {body}")
     try:
       mail = MIMEMultipart()
       mail['From'] = self._mail_user

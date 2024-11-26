@@ -12,19 +12,24 @@ class BucketClient:
       aws_secret_access_key=os.environ.get("BUCKET_SECRET_KEY")    
     )
     self._bucket = os.environ.get("BUCKET_NAME")
-    
+    self._check_bucket(self._bucket)
+  
+  def _check_bucket(self, bucket_name: str):
     if self._bucket not in self._get_buckets():
       self._client.create_bucket(Bucket=self._bucket)
       print("BUCKET CREATED...")
     else:
       print("BUCKET ALREADY EXISTS...")
-    
+  
   def _get_buckets(self):
     return self._client.list_buckets()
     
   def upload_file(self, file, user_id, bucket_name:str = None):
     object_name = f"{user_id}_{file.filename}"
-    bucket = bucket_name or self._bucket
+    if bucket_name:
+      bucket = f"{self._bucket}/{bucket_name}"
+    else:
+      bucket = self._bucket
     try:
       self._client.upload_fileobj(file.stream, bucket, object_name, ExtraArgs={"ACL": "public-read"})
       return f"{self.url.replace("ninja", "localhost")}/{bucket}/{object_name}?noAuth=true" # AJUSTAR ANTES DE DESPLEGAR
