@@ -1,0 +1,18 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /home/ec2-user/projects/secret-friend
+hooks:
+  BeforeInstall:
+   - location: scripts/install_dependencies.sh
+     timeout: 300
+     runas: root
+  ApplicationStop:
+   - location: scripts/stop.sh
+     timeout: 300
+     runas: root
+  ApplicationStart:
+   - location: scripts/start.sh
+     timeout: 600
+     runas: root
