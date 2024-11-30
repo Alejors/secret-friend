@@ -45,6 +45,8 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
+      ninja:
+        condition: service_started
     networks:
       - backend
 

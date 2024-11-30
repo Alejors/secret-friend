@@ -6,12 +6,22 @@ class BucketClient:
   def __init__(self):
     self.url = os.environ.get("BUCKET_URL")
     self._region = os.environ.get("AWS_REGION")
-    self._client = boto3.client(
-      's3',
-      aws_access_key_id=os.environ.get("BUCKET_ACCESS_KEY"),
-      aws_secret_access_key=os.environ.get("BUCKET_SECRET_KEY"),
-      region_name=self._region
-    )
+    if os.environ.get("ENVIRONMENT") == "local":
+      print("Initializing Local Client")
+      print(os.environ.get("BUCKET_ACCESS_KEY"),"\n",os.environ.get("BUCKET_SECRET_KEY"))
+      self._client = boto3.client(
+        's3',
+        aws_access_key_id=os.environ.get("BUCKET_ACCESS_KEY"),
+        aws_secret_access_key=os.environ.get("BUCKET_SECRET_KEY")
+      )
+    else:
+      print("Initializing Deployed Client")
+      self._client = boto3.client(
+        's3',
+        aws_access_key_id=os.environ.get("BUCKET_ACCESS_KEY"),
+        aws_secret_access_key=os.environ.get("BUCKET_SECRET_KEY"),
+        region_name=self._region
+      )
     self._bucket = os.environ.get("BUCKET_NAME")
     self._check_bucket()
   
@@ -37,7 +47,8 @@ class BucketClient:
         file.stream,
         self._bucket,
         object_name,
-        ExtraArgs={"ContentType": "image/jpeg"})
+        ExtraArgs={"ContentType": "image/jpeg"},
+      )
 
       if os.environ.get("ENVIRONMENT") == "local":
         return f"{self.url.replace("ninja", "localhost")}{object_name}?noAuth=true"
