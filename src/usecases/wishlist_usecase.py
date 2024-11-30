@@ -88,8 +88,8 @@ class ManageWishlistUsecase:
     wishlist_elements = ''.join([f'<li><a href={item.url}>{item.element}</a></li>' for item in updated_wishlist if item.element is not None])
     body = HEADER + f"""
         <h2>Hola, {user_who_picked.name}!</h2>
-        <p>Tu amigo secreto actualizó su <b>lista de deseos</b>!</p>
-        <p>Aquí tienes ideas para regalarle:</p> 
+        <p>Tu amigo secreto de <b>{current_event.name}</b> actualizó su <b>lista de deseos</b>!\U0001F38A</p>
+        <p>\U0001F381 Aquí tienes ideas para regalarle:</p>
         <ul>{wishlist_elements}</ul>
         """ + FOOTER
     self._mailing_client.login()

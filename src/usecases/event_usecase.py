@@ -158,7 +158,7 @@ class ManageEventsUsecase:
         # quitamos este elemento de la lista de los no escogidos aún
         not_picked_participants.remove(pick)
       self._events_repository.update(event.id, {"drawn": True})
-      
+      self._send_event_drawn_mail(event_participants_ids, event)
       return True, None
     # Si falla cualquier update, tenemos que eliminar cualquier update que alcanzó a hacerse
     except Exception as e:
@@ -193,10 +193,12 @@ class ManageEventsUsecase:
         body = HEADER + f"""
               <h2>Hola!</h2>
               <p>Se realizó el sorteo de <b>{event.name}</b>!</p>
-              <p>Tu amigo secreto es: {picked_user.name}!</p>"""
+              <p>Tu amigo secreto es:</p>
+              <h2>{picked_user.name}!\U0001F973</h2>
+              """
         if wishlist:
           wishlist_elements = ''.join([f'<li><a href={item.url}>{item.element}</a></li>' for item in wishlist if item.element is not None])
-          body = body + f"<br/><p>Algunas ideas de regalo son:</p><ul>{wishlist_elements}</ul>"
+          body = body + f"<br/><p>Algunas ideas de regalo \U0001F381 son:</p><ul>{wishlist_elements}</ul>"
         body = body + FOOTER
         self._mailing_client.send_mail(current_participant.email, f"Tu amigo secreto para: {event.name}", body)
       else:
