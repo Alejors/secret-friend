@@ -22,6 +22,6 @@ jobs:
         run: |
           aws deploy create-deployment \
             --application-name secret-friend \
-            --deployment-group-name SecretFriend_group \
+            --deployment-group-name secret-friend-group \
             --deployment-config-name CodeDeployDefault.OneAtATime \
             --github-location repository=${{ github.repository }},commitId=${{ github.sha }}
