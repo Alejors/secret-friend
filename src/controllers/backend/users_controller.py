@@ -1,7 +1,5 @@
-import os
-
-from flask import url_for, redirect, flash, make_response, Blueprint, request, jsonify
-from flask_jwt_extended import get_jwt_identity, jwt_required, get_csrf_token
+from flask import Blueprint, request, jsonify
+from flask_jwt_extended import get_jwt_identity, jwt_required
 
 from src.frameworks.validation.validation import validate_schema_flask
 from src.frameworks.validation.schemas import REGISTRY_VALIDATION_SCHEMA, LOGIN_VALIDATION_SCHEMA
@@ -73,34 +71,46 @@ def create_users_controller(users_usecase: ManageUsersUsecase):
   @blueprint.route("/register", methods=["POST"])
   @validate_schema_flask(REGISTRY_VALIDATION_SCHEMA)
   def register_user():
-    data = request.get_json() if request.headers.get('Content-Type') == "application/json" else request.form
+    data = request.get_json()
     user, error = users_usecase.create_user(data)
     if user:
-      flash("Registro Exitoso!", "success")
-      return redirect(url_for('frontend.login_view'))
+      user_data = user.serialize_user()
+      response = {
+          "code": SUCCESS_CODE,
+          "message": "User Created",
+          "data": user_data
+        }
+      response_code = CREATED
     else:
-      flash(f"Se Produjo un Error: {error}", "error")
-      return redirect(url_for('frontend.register_view'))
+      response = {
+          "code": FAIL_CODE,
+          "message": f"Error Creating User: {error}"
+        }
+      response_code = BAD_REQUEST
+      
+    return jsonify(response), response_code
   
   @blueprint.route("/login", methods=["POST"])
   @validate_schema_flask(LOGIN_VALIDATION_SCHEMA)
   def user_login():
-    data = request.get_json() if request.headers.get('Content-Type') == "application/json" else request.form
+    data = request.get_json()
     user, token = users_usecase.user_log_in(data)
     if not user:
-      flash("Las Credenciales No Coinciden", "error")
-      return redirect(url_for('frontend.login_view'))
+      response = {
+        "code": FAIL_CODE,
+        "message": "Credentials do not Match"
+      }
+      response_code = UNAUTHORIZED
     else:
-      response = make_response(redirect(url_for('frontend.home_view')))
-      response.set_cookie('access_token_cookie', token, httponly=True, secure=os.environ.get("ENVIRONMENT")!="local")
-      response.set_cookie('csrf_access_token', get_csrf_token(token), httponly=True, secure=os.environ.get("ENVIRONMENT")!="local")
-      return response
-  
-  @blueprint.route("/logout")
-  def user_logout():
-    response = redirect(url_for('frontend.login_view'))
-    response.delete_cookie('access_token_cookie')
-    
-    return response
+      response = {
+        "code": SUCCESS_CODE,
+        "message": "Log in Succesful",
+        "data": {
+          "user": user.serialize_user(),
+          "token": token
+        }
+      }
+      response_code = OK
+    return jsonify(response), response_code
   
   return blueprint

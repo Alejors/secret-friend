@@ -1,5 +1,3 @@
-version: "3.7"
-
 services:
   mysql:
     image: mysql:8.0
@@ -9,11 +7,25 @@ services:
       MYSQL_DATABASE: ${SQL_ALCHEMY_DATABASE}
 
     healthcheck:
-        test: mysql $SQL_ALCHEMY_DATABASE -u$SQL_ALCHEMY_USERNAME -p$SQL_ALCHEMY_PASSWORD -e "SELECT 1"
-        interval: 2s
-        retries: 30
+      test: mysql $SQL_ALCHEMY_DATABASE -u$SQL_ALCHEMY_USERNAME -p$SQL_ALCHEMY_PASSWORD -e "SELECT 1"
+      interval: 2s
+      retries: 30
     ports:
       - ${DOCKER_MYSQL_PORT}:3306
+    networks:
+      - backend
+
+  ninja:
+    image: kcomlabs/s3ninja
+    ports:
+      - "${S3_PORT}:9444"
+    
+    environment:
+      - BUCKET_NAME=${BUCKET_NAME}
+
+    volumes:
+      - ./src/frameworks/bucket/documents/:/s3ninja/data/s3
+
     networks:
       - backend
 

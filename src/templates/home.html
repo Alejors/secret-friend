@@ -10,42 +10,58 @@
   </div>
   </br>
   <div class="d-flex justify-between">
-    <div>
-      <label for="events">Eventos:</label>
-      <select name="events" id="events">
+    <div class="ms-5">
+      <h3>Mis Concursos:</h3>
+      <br/>
       {% if events %}
+      <ul>
         {% for event in events %}
-        <option value="{{event.id}}">{{event.name}}</option>
+        <li><a href="{{url_for("home.home_view", event_id=event.id)}}">{{ event.name }}</a></li>
+        <br/>
         {% endfor %}
-      {% else %}
-        <option disabled>--No hay Eventos--</option>
+      </ul>
       {% endif %}
-      </select>
     </div>
-    <div class="me-25">
-      {% if event_pick %}
-        <p>Tu Amigo Secreto para {{current_event.name}} es:</p>
-        <h1>{{event_pick.name}}</h1>
-      {% else %}
-        <p> El concurso aún no se lanza </p>
-      {% endif %}
-      {% if wishlist %}
-      <table>
-        <tr>
-          <th>Descripción</th>
-          <th>Ejemplo</th>
-        </tr>
-      {% for wish in wishlist %}
-        <tr>
-          <td>{{wish.element}}</td>
-          <td>{{wish.url}}</td>
-        </tr>
-      {% endfor %}
+    {% if current_event.min_price or current_event.max_price %}
+    <div class="white-seethrough p-1" style="border: 2px black solid;">
+      <span>Te recordamos que este concurso:</span>
+      <ul class="ms-5">
+        <br/>
         {% if current_event.min_price%}
-        <small> Te recordamos que el valor mínimo del regalo es: {{current_event.min_price}}
+        <li>el valor <strong>mínimo</strong> del regalo es: <strong>${{current_event.min_price}}</strong></li>
+        <br/>
         {% endif %}
         {% if current_event.max_price%}
-        <small> Te recordamos que el valor máximo del regalo es: {{current_event.max_price}}
+        <li>el valor <strong>máximo</strong> del regalo es: <strong>${{current_event.max_price}}</strong></li>
+        {% endif %}
+      </ul>
+    </div>
+    {% endif %}
+    {% if event_pick %}
+    <div class="d-flex align-center">
+      <p>Tu Amigo Secreto para {{current_event.name}} es:&nbsp;&nbsp;</p>
+      <h1>{{event_pick.name}}</h1>
+    </div>
+    <div class="me-25">   
+        {% if wishlist %}
+        <table class="white-seethrough" >
+          <tr>
+            <th>Descripción</th>
+            <th>Imagen de Referencia</th>
+          </tr>
+          {% for wish in wishlist %}
+          <tr>
+            <td class="p-1">{{wish.element}}</td>
+            <td class="p-1"><img class="wishlist" src="{{wish.url}}" alt="{{wish.element}}"></td>
+          </tr>
+          {% endfor %}
+        </table>
+        {% endif %}
+      {% else %}
+        {% if current_event %}
+        <p> El concurso {{ current_event.name }} aún no se lanza </p>
+        {% else %}
+        <p> No hay ningún evento aún </p>
         {% endif %}
       {% endif %}
       {% if pick_error%}
@@ -59,7 +75,7 @@
   selectElement.addEventListener("change", function () {
     const selectedValue = selectElement.value;
     if (selectedValue) {
-      window.location.href = {{url_for('frontend.home_view', stylesheet=url_for('static', filename='styles/home.css'), event_id=selectedValue)}}`;
+      window.location.href = {{url_for('home.home_view', event_id=selectedValue)}}`;
     }
   });
 </script>

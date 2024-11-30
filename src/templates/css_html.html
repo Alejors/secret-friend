@@ -1,6 +1,6 @@
 div.container {
   width: 100%;
-  min-height: 100vh;
+  min-height: 95vh;
   padding: 25px 25px;
   background: #626cd6;
 }
@@ -8,26 +8,94 @@ div.container {
   display: flex;
 }
 .justify-between {
-  justify-content: space-between
+  justify-content: space-between;
 }
 .justify-evenly {
-  justify-content: space-evenly
+  justify-content: space-evenly;
+}
+.justify-center {
+  justify-content: center;
 }
 .me-25 {
-  margin-right: 25%
+  margin-right: 25%;
 }
 .me-5 {
-  margin-right: 5%
+  margin-right: 5%;
 }
 .ms-25 {
-  margin-left: 25%
+  margin-left: 25%;
 }
 .ms-5 {
-  margin-left: 5%
+  margin-left: 5%;
+}
+.align-center{
+  align-items: center;
+}
+img.wishlist{
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px;
+  width: 150px;
+  transition: transform 0.3s ease;
+}
+
+table, th, td{
+  border: 1px black solid;
+}
+
+.p-1{
+  padding: 10px;
+}
+
+img.wishlist:hover{
+  transform: scale(2);
 }
 
 button.event{
-  background-color: green;
   color: white;
   border-radius: 25px;
+}
+
+.green{
+  background-color: green;
+}
+.yellow{
+  background-color: yellow;
+}
+.purple{
+  background-color: #80028a;
+}
+
+.plus_button{
+  border: 1px white solid;
+  color: white;
+  border-radius: 25%;
+  width: 25px;
+  height: 25px;
+}
+
+.mb-5{
+  margin-bottom: 5px;
+}
+
+select{
+  width: 50%;
+  border-radius: 5px;
+}
+
+.white-seethrough{
+  background: #FFFFFF80;
+}
+
+.col-6{
+  width: 50vw;
+}
+
+input[type="submit"]{
+  margin: 5px;
+  width: 50%;
+  background: green;
+  color: white;
+  border-radius: 5px;
+  padding: 5px;
 }

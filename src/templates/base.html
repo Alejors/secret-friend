@@ -58,7 +58,7 @@
     {% endblock %}
     </style>
   </head>
-  {% if request.path != '/s1/'%}
+  {% if request.path != '/s1/' and request.path != '/s1/register' %}
     {% include 'nav.html'%}
   {% endif %}
   <body>

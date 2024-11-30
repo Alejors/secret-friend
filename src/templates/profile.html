@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Perfil{% endblock title %}
+{% block styles%}
+{% include 'css_html.html' %}
+{% endblock styles %}
+{% block content %}
+<div>
+  <h1> Perfil Personal </h1>
+  <br/>
+  <div>
+    <form action="{{url_for("profile.profile_view")}}" method="POST">
+      {{ form.hidden_tag() }}
+      <table class="white-seethrough">
+        <tr>
+          <td>
+            {{ form.name.label }} 
+          </td>
+          <td>
+            {{ form.name }}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            {{ form.email.label }}
+          </td>
+          <td>
+            {{ form.email }}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            {{ form.current_password.label }}
+          </td>
+          <td>
+            {{ form.current_password }}
+          </td>
+        </tr>
+        <tr>
+          <td>
+            {{ form.new_password.label }}
+          </td>
+          <td>
+            {{ form.new_password }}
+          </td>
+        </tr>
+        <tr>
+          <td colspan=2>
+            {{ form.submit }}
+          </td>
+        </tr>
+      </table>
+    </form>
+  <div>
+</div>
+{% endblock content%}
