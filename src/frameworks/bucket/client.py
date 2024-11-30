@@ -7,15 +7,15 @@ class BucketClient:
     self.url = os.environ.get("BUCKET_URL")
     self._region = os.environ.get("AWS_REGION")
     if os.environ.get("ENVIRONMENT") == "local":
-      print("Initializing Local Client")
-      print(os.environ.get("BUCKET_ACCESS_KEY"),"\n",os.environ.get("BUCKET_SECRET_KEY"))
+      print("Initializing Local Bucket Client")
       self._client = boto3.client(
         's3',
+        endpoint_url=self.url,
         aws_access_key_id=os.environ.get("BUCKET_ACCESS_KEY"),
         aws_secret_access_key=os.environ.get("BUCKET_SECRET_KEY")
       )
     else:
-      print("Initializing Deployed Client")
+      print("Initializing Deployed Bucket Client")
       self._client = boto3.client(
         's3',
         aws_access_key_id=os.environ.get("BUCKET_ACCESS_KEY"),
@@ -27,10 +27,9 @@ class BucketClient:
   
   def _check_bucket(self):
     if self._bucket not in self._get_buckets():
+      print("BUCKET DOESN'T EXIST...")
       self._client.create_bucket(Bucket=self._bucket)
-      print("BUCKET CREATED...")
-    else:
-      print("BUCKET ALREADY EXISTS...")
+      print("BUCKET CREATED")
 
   def _get_buckets(self):
     response = self._client.list_buckets().get("Buckets")
