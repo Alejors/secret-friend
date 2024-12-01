@@ -6,6 +6,8 @@ from src.frameworks.mail.client import MailingClient
 from src.frameworks.bucket.client import BucketClient
 from src.repositories import SQLAlchemyEventUsersRepository
 
+from src.utils.mail_constants import HEADER, FOOTER
+
 
 class ManageWishlistUsecase:
   def __init__(
@@ -76,23 +78,20 @@ class ManageWishlistUsecase:
       
       updated_wishlist = self.get_wishlist_by_user_and_event(user_id, current_event.id)
       if current_event.drawn:
-        # MANDAR MAIL DE QUE SE ACTUALIZO LISTA DE DESEOS
-        user_who_picked = self.get_who_picked(user_id, current_event.id)
-        wishlist_elements = ''.join([f'<li><a href={item.url}>{item.element}</a></li>' for item in updated_wishlist if item.element is not None])
-        body = f"""
-        <html>
-          <body>
-            <h1>Hola, {user_who_picked.name}!</h1>
-            <p>Tu amigo secreto actualizó su <b>lista de deseos</b>!</p>
-            <p>Aquí tienes ideas para regalarle:</p> 
-            <ul>{wishlist_elements}</ul>
-            <br/>
-            <p>saludos!</p>
-          </body>
-        </html>"""
-        self._mailing_client.login()
-        self._mailing_client.send_mail(user_who_picked.email, "Lista de Deseos Actualizada!", body)
-        self._mailing_client.logout()
+        self._send_wishlist_updated_mail(user_id, current_event, updated_wishlist)
       return updated_wishlist, None
     except Exception as e:
       return None, str(e)
+    
+  def _send_wishlist_updated_mail(self, user_id: int, current_event: Event, updated_wishlist: list[Wish]):
+    user_who_picked = self.get_who_picked(user_id, current_event.id)
+    wishlist_elements = ''.join([f'<li><a href={item.url}>{item.element}</a></li>' for item in updated_wishlist if item.element is not None])
+    body = HEADER + f"""
+        <h2>Hola, {user_who_picked.name}!</h2>
+        <p>Tu amigo secreto de <b>{current_event.name}</b> actualizó su <b>lista de deseos</b>!\U0001F38A</p>
+        <p>\U0001F381 Aquí tienes ideas para regalarle:</p>
+        <ul>{wishlist_elements}</ul>
+        """ + FOOTER
+    self._mailing_client.login()
+    self._mailing_client.send_mail(user_who_picked.email, "Lista de Deseos Actualizada!", body)
+    self._mailing_client.logout()

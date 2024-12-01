@@ -10,6 +10,8 @@ from src.frameworks.mail.client import MailingClient
 from src.repositories import SQLAlchemyEventUsersRepository
 from src.usecases.wishlist_usecase import ManageWishlistUsecase
 
+from src.utils.mail_constants import HEADER, FOOTER
+
 
 class ManageEventsUsecase:
   def __init__(
@@ -52,7 +54,8 @@ class ManageEventsUsecase:
     user_exists = self._users_usecase.get_user_by_email(data["email"])
 
     if not user_exists:
-      data["password"] = event.name
+      initial_password = str(event.name).lower().replace(" ", "_")
+      data["password"] = initial_password
       user_exists, error = self._users_usecase.create_user(data)
       # Si hubo un error en la creación, no habrá un User en user_exists,
       # debemos detener aquí la ejecución para evitar errores al intentar 
@@ -155,25 +158,7 @@ class ManageEventsUsecase:
         # quitamos este elemento de la lista de los no escogidos aún
         not_picked_participants.remove(pick)
       self._events_repository.update(event.id, {"drawn": True})
-      self._mailing_client.login()
-      for participant in event_participants_ids:
-        current_participant = next(user for user in event.users if user.id == participant)
-        picked_user, wishlist, error = self.get_pick_from_event(current_participant.id, event.id)
-        if not error:
-          body = f"""
-        <html>
-          <body>
-            <h1>Hola!</h1>
-            <p>Se realizó el sorteo de <b>{event.name}</b>!</p>
-            <p>Tu amigo secreto es: {picked_user.name}!</p> """
-          if wishlist:
-            wishlist_elements = ''.join([f'<li><a href={item.url}>{item.element}</a></li>' for item in wishlist if item.element is not None])
-            body = body + f"<br/><p>Algunas ideas de regalo son:</p><ul>{wishlist_elements}</ul>"
-          body = body + "<br/><p>Saludos!</p></body></html>"
-          self._mailing_client.send_mail(current_participant.email, f"Tu amigo secreto para: {event.name}", body)
-        else:
-          print(error)
-      self._mailing_client.logout()
+      self._send_event_drawn_mail(event_participants_ids, event)
       return True, None
     # Si falla cualquier update, tenemos que eliminar cualquier update que alcanzó a hacerse
     except Exception as e:
@@ -198,3 +183,24 @@ class ManageEventsUsecase:
   
   def get_events_by_user_id(self, user_id: int) -> list[Event]:
     return self._event_users_repository.get_events_by_participant(user_id)
+
+  def _send_event_drawn_mail(self, user_ids: list, event: Event):
+    self._mailing_client.login()
+    for participant in user_ids:
+      current_participant = next(user for user in event.users if user.id == participant)
+      picked_user, wishlist, error = self.get_pick_from_event(current_participant.id, event.id)
+      if not error:
+        body = HEADER + f"""
+              <h2>Hola!</h2>
+              <p>Se realizó el sorteo de <b>{event.name}</b>!</p>
+              <p>Tu amigo secreto es:</p>
+              <h2>{picked_user.name}!\U0001F973</h2>
+              """
+        if wishlist:
+          wishlist_elements = ''.join([f'<li><a href={item.url}>{item.element}</a></li>' for item in wishlist if item.element is not None])
+          body = body + f"<br/><p>Algunas ideas de regalo \U0001F381 son:</p><ul>{wishlist_elements}</ul>"
+        body = body + FOOTER
+        self._mailing_client.send_mail(current_participant.email, f"Tu amigo secreto para: {event.name}", body)
+      else:
+        print(error)
+    self._mailing_client.logout()

@@ -12,20 +12,8 @@ services:
       retries: 30
     ports:
       - ${DOCKER_MYSQL_PORT}:3306
-    networks:
-      - backend
-
-  ninja:
-    image: kcomlabs/s3ninja
-    ports:
-      - "${S3_PORT}:9444"
-    
-    environment:
-      - BUCKET_NAME=${BUCKET_NAME}
-
     volumes:
-      - ./src/frameworks/bucket/documents/:/s3ninja/data/s3
-
+      - mysql_data:/var/lib/mysql
     networks:
       - backend
 
@@ -45,11 +33,12 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-      ninja:
-        condition: service_started
     networks:
       - backend
 
 networks:
   backend:
     name: ${DOCKER_NETWORK}
+
+volumes:
+  mysql_data:

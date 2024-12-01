@@ -88,6 +88,6 @@ def create_frontevent_controller(events_usecase: ManageEventsUsecase):
       return redirect(url_for("home.home_view"))
     else:
       flash(error, "error")
-      return redirect(url_for("frontevents.events_view"))
+      return redirect(url_for("frontevent.events_view"))
   
   return blueprint
