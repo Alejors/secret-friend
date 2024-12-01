@@ -1,4 +1,6 @@
 #!/bin/bash
 echo “Starting server...”
 cd /home/ec2-user/projects/secret-friend
-/usr/local/bin/docker-compose -f docker-compose.yml up -d --build
+/usr/local/bin/docker-compose -f docker-compose.prod.yml build
+/usr/local/bin/docker-compose -f docker-compose.prod.yml up -d
+/usr/local/bin/docker-compose -f docker-compose.prod.yml exec api alembic upgrade head
