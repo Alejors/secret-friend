@@ -1,0 +1,44 @@
+services:
+  mysql:
+    image: mysql:8.0
+
+    environment:
+      MYSQL_ROOT_PASSWORD: ${SQL_ALCHEMY_PASSWORD}
+      MYSQL_DATABASE: ${SQL_ALCHEMY_DATABASE}
+
+    healthcheck:
+      test: mysql $SQL_ALCHEMY_DATABASE -u$SQL_ALCHEMY_USERNAME -p$SQL_ALCHEMY_PASSWORD -e "SELECT 1"
+      interval: 2s
+      retries: 30
+    ports:
+      - ${DOCKER_MYSQL_PORT}:3306
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - backend
+
+  api:
+    build: .
+    container_name: ${DOCKER_SERVICE_NAME}
+
+    env_file:
+      - .env
+
+    ports:
+      - ${DOCKER_PORT}:8000
+
+    volumes:
+      - ./.:/app/
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - backend
+
+networks:
+  backend:
+    name: ${DOCKER_NETWORK}
+
+volumes:
+  mysql_data:
