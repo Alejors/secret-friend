@@ -20,7 +20,8 @@ def create_landing_controller(users_usecase: ManageUsersUsecase):
         return redirect(url_for('landing.login_view'))
       else:
         response = make_response(redirect(url_for('home.home_view')))
-        set_access_cookies(response, token)
+        domain = os.getenv('DOMAIN') or None
+        set_access_cookies(response, token, domain=domain)
         return response
     return render_template("login.html", form=form)
   
