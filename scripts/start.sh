@@ -5,4 +5,4 @@ mkdir -p /logs
 
 /usr/local/bin/docker-compose -f docker-compose.prod.yml build
 /usr/local/bin/docker-compose -f docker-compose.prod.yml up -d
-/usr/local/bin/docker-compose -f docker-compose.prod.yml exec api alembic upgrade head  > /logs/alembic_upgrade.log 2>&1
+sudo /usr/local/bin/docker-compose -f docker-compose.prod.yml exec api alembic upgrade head  > /logs/alembic_upgrade.log 2>&1
