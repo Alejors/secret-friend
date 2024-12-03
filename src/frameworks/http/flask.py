@@ -11,11 +11,14 @@ def create_flask_app(blueprints, commands: dict):
   static_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "static"))
   app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
 
+  environment = os.environ.get("ENVIRONMENT")
   app.config['JWT_SECRET_KEY'] = os.environ.get("JWT_SECRET_KEY")
   app.config['JWT_TOKEN_LOCATION'] = ['cookies', 'headers', 'query_string']
-  if os.environ.get("ENVIRONMENT") == "local":
+  if environment == "local":
     app.config['DEBUG'] = True # DEV
     app.config['TEMPLATES_AUTO_RELOAD'] = True # DEV
+  else:
+    app.config['JWT_COOKIE_DOMAIN'] = 'nicoaraya.tech'
   app.config['JWT_COOKIE_CSRF_PROTECT'] = False
   app.config['WTF_CSRF_ENABLED'] = True
   app.config["JWT_COOKIE_SECURE"] = False
