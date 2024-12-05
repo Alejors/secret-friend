@@ -199,6 +199,13 @@ class ManageEventsUsecase:
         if wishlist:
           wishlist_elements = ''.join([f'<li><a href={item.url}>{item.element}</a></li>' for item in wishlist if item.element is not None])
           body = body + f"<br/><p>Algunas ideas de regalo \U0001F381 son:</p><ul>{wishlist_elements}</ul>"
+        if event.min_price or event.max_price:
+          body = body + "<br/><p>Recuerda que el regalo:</p><ul>"
+          if event.min_price:
+            body = body + f"<li>Tiene un monto mínimo de: ${event.min_price}</li>"
+          if event.max_price:
+            body = body + f"<li>Tiene un monto máximo de: ${event.max_price}</li>"
+          body = body + "</ul>"
         body = body + FOOTER
         self._mailing_client.send_mail(current_participant.email, f"Tu amigo secreto para: {event.name}", body)
       else:
