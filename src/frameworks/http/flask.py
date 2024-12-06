@@ -18,7 +18,8 @@ def create_flask_app(blueprints, commands: dict):
     app.config['DEBUG'] = True # DEV
     app.config['TEMPLATES_AUTO_RELOAD'] = True # DEV
   else:
-    app.config['JWT_COOKIE_DOMAIN'] = 'nicoaraya.tech'
+    app.config['JWT_COOKIE_DOMAIN'] = os.environ.get("DOMAIN")
+    app.config['JWT_COOKIE_SAMESITE'] = 'Lax'
   app.config['JWT_COOKIE_CSRF_PROTECT'] = False
   app.config['WTF_CSRF_ENABLED'] = True
   app.config["JWT_COOKIE_SECURE"] = False

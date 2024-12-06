@@ -37,7 +37,7 @@ services:
       - .env
 
     ports:
-      - ${DOCKER_PORT}:8000
+      - ${PORT}:8000
 
     volumes:
       - ./.:/app/
