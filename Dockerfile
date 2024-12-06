@@ -8,4 +8,4 @@ ENV PYTHONPYCACHEPREFIX=/tmp
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-CMD ["gunicorn", "-b", ":8000", "src.main:app", "--reload"]
+CMD gunicorn --bind :$PORT src.main:app --workers 1 --threads 8 --timeout 0 --reload -t 60
