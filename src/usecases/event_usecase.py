@@ -54,7 +54,12 @@ class ManageEventsUsecase:
     user_exists = self._users_usecase.get_user_by_email(data["email"])
 
     if not user_exists:
-      initial_password = str(event.name).lower().replace(" ", "_")
+      import string
+      import random
+      def _get_random_password():
+        return ''.join(random.choices(string.ascii_letters + string.digits, k = 8))
+
+      initial_password = _get_random_password()
       data["password"] = initial_password
       user_exists, error = self._users_usecase.create_user(data)
       # Si hubo un error en la creación, no habrá un User en user_exists,
@@ -62,6 +67,8 @@ class ManageEventsUsecase:
       # insertar un elemento en event_user
       if error:
         return error
+      else:
+        self._send_new_user_email(user_exists, initial_password)
     try:  
       self._event_users_repository.insert_participant(user_exists.id, event.id)
     except IntegrityError as e:
@@ -75,6 +82,20 @@ class ManageEventsUsecase:
         self._event_users_repository.update_participation(user_exists.id, event.id, renewal)
       else:
         return str(e)
+  
+  def _send_new_user_email(self, user: User, password: str):
+    self._mailing_client.login()
+    body = HEADER + f"""
+              <h2>Hola, {user.name}!</h2><br/>
+              <p>Se te incluyó recientemente en un concurso de Amigo Secreto APP!<br/>
+              Por eso hemos creado una cuenta para ti. <br/><br/> 
+              La clave inicial es: <b>{password}</b>.<br/>
+              En tu perfil puedes modificarla. <br/><br/>
+              Además puedes agregar una pequeña lista de deseos para ayudar a que te compren algo que te guste!<br/>
+              Te notificaremos por correo cuando se realice el sorteo.</p>
+              """ + FOOTER
+    self._mailing_client.send_mail(user.email, f"Se te incluyó en un Amigo Secreto!", body)
+    self._mailing_client.logout()
   
   def create_event(self, data: dict) -> tuple[Event|None, str|None]:
     event = Event.from_dict(data)
