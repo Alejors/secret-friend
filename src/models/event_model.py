@@ -6,7 +6,7 @@ from src.frameworks.db.sqlalchemy.sqlalchemy_client import Base
 from src.models.base_model import SQLAlchemyBaseModel
 
 
-class Event(SQLAlchemyBaseModel, Base):
+class EventModel(SQLAlchemyBaseModel, Base):
   __tablename__ = 'events'
   
   id = Column(Integer, primary_key=True)
@@ -28,9 +28,9 @@ class Event(SQLAlchemyBaseModel, Base):
     UniqueConstraint('user_id', 'event_id', name='uix_user_event')
   )
   
-  owner = relationship("User", foreign_keys=[owner_id], viewonly=True, lazy="joined")
+  owner = relationship("UserModel", foreign_keys=[owner_id], viewonly=True, lazy="joined")
   users = relationship(
-    "User", 
+    "UserModel", 
     secondary=event_users, 
     backref="events", 
     lazy="joined", 
@@ -44,7 +44,7 @@ class Event(SQLAlchemyBaseModel, Base):
 
   @classmethod
   def from_dict(cls, _dict: dict):
-    return Event(
+    return EventModel(
       id=_dict.get("id"),
       name=_dict.get("name"),
       owner_id=_dict.get("owner_id"),

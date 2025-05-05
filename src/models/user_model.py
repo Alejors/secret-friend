@@ -4,7 +4,7 @@ from src.frameworks.db.sqlalchemy.sqlalchemy_client import Base
 from src.models.base_model import SQLAlchemyBaseModel
 
 
-class User(SQLAlchemyBaseModel, Base):
+class UserModel(SQLAlchemyBaseModel, Base):
   __tablename__ = "users"
   
   id = Column(Integer, primary_key=True)
@@ -14,7 +14,7 @@ class User(SQLAlchemyBaseModel, Base):
 
   @classmethod
   def from_dict(cls, _dict: dict):
-    return User(
+    return UserModel(
       id=_dict.get("id"),
       name=_dict.get("name"),
       email=_dict.get("email"),
