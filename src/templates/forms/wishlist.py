@@ -8,5 +8,5 @@ class ItemForm(FlaskForm):
   url = StringField('Pega un link: ')
 
 class WishlistForm(FlaskForm):
-  items = FieldList(FormField(ItemForm), min_entries=3, max_entries=3)
+  items = FieldList(FormField(ItemForm), min_entries=1)
   submit = SubmitField('Actualizar Lista de Deseos')
