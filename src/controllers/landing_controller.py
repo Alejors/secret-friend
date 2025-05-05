@@ -1,7 +1,7 @@
 import os
 
 from flask import url_for, redirect, flash, render_template, Blueprint, request, make_response
-from flask_jwt_extended import get_csrf_token, set_access_cookies
+from flask_jwt_extended import set_access_cookies
 from src.usecases import ManageUsersUsecase
 from src.templates.forms import LoginForm, RegistryForm
 
