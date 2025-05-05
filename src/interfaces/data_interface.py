@@ -10,7 +10,7 @@ class IDataRepository(ABC):
     pass
   
   @abstractmethod
-  def insert(self, data: T) -> T|None:
+  def insert(self, data: dict) -> T|None:
     print("Method Not Implemented")
     pass
   

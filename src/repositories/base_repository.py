@@ -29,24 +29,24 @@ class SQLAlchemyBaseRepository(IDataRepository):
             if first_only:
                 results = query.first()
                 if self.entity:
-                    return self.entity.from_model(results)
+                    return self.entity.from_model(results) if results else None
                 return results
             else:
                 results = query.all()
                 if self.entity:
-                    return [self.entity.from_model(result) for result in results]
+                    return [self.entity.from_model(result) for result in results if result]
                 return results
 
     def insert(
         self,
-        dict: dict,
+        data: dict,
     ):
         with self.session_factory() as session:
-            instance = self.query_class.from_dict(dict)
+            instance = self.query_class(**data)
             session.add(instance)
             session.commit()
             if self.entity:
-                return self.entity.from_model(instance)
+                return self.entity.from_model(instance) if instance else None
             return instance
 
     def update(
@@ -60,6 +60,7 @@ class SQLAlchemyBaseRepository(IDataRepository):
             instance = query.first()
 
             session.commit()
+            
             if self.entity:
-                return self.entity.from_model(instance)
+                return self.entity.from_model(instance) if instance else None
             return instance
