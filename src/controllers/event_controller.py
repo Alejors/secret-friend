@@ -6,8 +6,8 @@ from src.usecases import ManageEventsUsecase
 from src.templates.forms import EventForm
 
 
-def create_frontevent_controller(events_usecase: ManageEventsUsecase):
-  blueprint = Blueprint("frontevent", __name__, url_prefix="/s1")
+def create_event_controller(events_usecase: ManageEventsUsecase):
+  blueprint = Blueprint("event", __name__, url_prefix="/s1")
   
   @blueprint.route("/manage-events", methods=["GET", "POST"])
   @jwt_required()

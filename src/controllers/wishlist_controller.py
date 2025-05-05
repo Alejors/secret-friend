@@ -7,8 +7,8 @@ from src.usecases import ManageWishlistUsecase, ManageEventsUsecase
 from src.templates.forms import WishlistForm
 
 
-def create_frontend_wishlist_controller(wishlists_usecase: ManageWishlistUsecase, events_usecase: ManageEventsUsecase):
-  blueprint = Blueprint("frontend_wishlist", __name__, url_prefix="/s1")
+def create_wishlist_controller(wishlists_usecase: ManageWishlistUsecase, events_usecase: ManageEventsUsecase):
+  blueprint = Blueprint("wishlist", __name__, url_prefix="/s1")
   
   @blueprint.route("/wishlist", methods=["GET", "POST"])
   @jwt_required()
