@@ -34,8 +34,8 @@ class EventModel(SQLAlchemyBaseModel, Base):
     secondary=event_users, 
     backref="events", 
     lazy="joined", 
-    primaryjoin="Event.id == event_users.c.event_id", 
-    secondaryjoin="and_(User.id == event_users.c.user_id, event_users.c.deleted_at == None)"
+    primaryjoin="EventModel.id == event_users.c.event_id", 
+    secondaryjoin="and_(UserModel.id == event_users.c.user_id, event_users.c.deleted_at == None)"
   )
   
   __table_args__ = (
