@@ -48,7 +48,7 @@ def create_event_controller(events_usecase: ManageEventsUsecase):
           flash("Evento Creado", "success")
       if error:
         flash(error, "error")
-        return redirect(url_for("frontevent.events_view", event_id=event_selected))
+        return redirect(url_for("event.events_view", event_id=event_selected))
       return redirect(url_for("home.home_view"))
     
     events = events_usecase.get_events_by_owner_id(user_id)
@@ -88,6 +88,6 @@ def create_event_controller(events_usecase: ManageEventsUsecase):
       return redirect(url_for("home.home_view"))
     else:
       flash(error, "error")
-      return redirect(url_for("frontevent.events_view"))
+      return redirect(url_for("event.events_view"))
   
   return blueprint
