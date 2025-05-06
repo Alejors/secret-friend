@@ -7,7 +7,7 @@ from src.templates.forms import LoginForm, RegistryForm
 
 
 def create_landing_controller(users_usecase: ManageUsersUsecase):
-  blueprint = Blueprint("landing", __name__, url_prefix="/s1")
+  blueprint = Blueprint("landing", __name__)
   
   @blueprint.route("/", methods=["GET", "POST"])
   def login_view():

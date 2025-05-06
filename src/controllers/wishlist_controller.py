@@ -8,7 +8,7 @@ from src.templates.forms import WishlistForm
 
 
 def create_wishlist_controller(wishlists_usecase: ManageWishlistUsecase, events_usecase: ManageEventsUsecase):
-  blueprint = Blueprint("wishlist", __name__, url_prefix="/s1")
+  blueprint = Blueprint("wishlist", __name__)
   
   @blueprint.route("/wishlist", methods=["GET", "POST"])
   @jwt_required()
@@ -55,7 +55,7 @@ def create_wishlist_controller(wishlists_usecase: ManageWishlistUsecase, events_
         return redirect(url_for("home.home_view"))
       else:
         flash(f"Lista Actualizada", "success")
-      return redirect(url_for("frontend_wishlist.wishlist_view", event_id=event_selected))
+      return redirect(url_for("wishlist.wishlist_view", event_id=event_selected))
     if event_selected:
       wishlist = wishlists_usecase.get_wishlist_by_user_and_event(user_id, event_selected)
       title = next(event.name for event in events if event.id == event_selected)

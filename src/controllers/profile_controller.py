@@ -7,7 +7,7 @@ from src.utils import check_password, hash_password
 
  
 def create_profile_controller(users_usecase: ManageUsersUsecase):
-  blueprint = Blueprint("profile", __name__, url_prefix="/s1")
+  blueprint = Blueprint("profile", __name__)
   
   @blueprint.route("/profile", methods=["GET", "POST"])
   @jwt_required()

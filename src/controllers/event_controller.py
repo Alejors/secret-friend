@@ -7,7 +7,7 @@ from src.templates.forms import EventForm
 
 
 def create_event_controller(events_usecase: ManageEventsUsecase):
-  blueprint = Blueprint("event", __name__, url_prefix="/s1")
+  blueprint = Blueprint("event", __name__)
   
   @blueprint.route("/manage-events", methods=["GET", "POST"])
   @jwt_required()

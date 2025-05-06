@@ -5,7 +5,7 @@ from src.usecases import ManageUsersUsecase, ManageEventsUsecase
 
 
 def create_home_controller(users_usecase: ManageUsersUsecase, events_usecase: ManageEventsUsecase):
-  blueprint = Blueprint("home", __name__, url_prefix="/s1")
+  blueprint = Blueprint("home", __name__)
 
   @blueprint.route("/home")
   @jwt_required()
