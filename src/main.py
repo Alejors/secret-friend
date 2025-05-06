@@ -9,6 +9,7 @@ from src.repositories import (
     SQLAlchemyEventsRepository,
     SQLAlchemyWishlistRepository,
     SQLAlchemyEventUsersRepository,
+    GmailEmailRepository,
 )
 
 from src.usecases import (
@@ -37,6 +38,8 @@ sqlalchemy_user_repository = SQLAlchemyUsersRepository(sqlalchemy_client)
 sqlalchemy_event_repository = SQLAlchemyEventsRepository(sqlalchemy_client)
 sqlalchemy_wishlist_repository = SQLAlchemyWishlistRepository(sqlalchemy_client)
 sqlalchemy_event_user_repository = SQLAlchemyEventUsersRepository(sqlalchemy_client)
+gmail_mailing_repository = GmailEmailRepository(mailing_client)
+# TODO: definir un repositorio de upload de archivos
 
 # Usecases
 users_usecase = ManageUsersUsecase(sqlalchemy_user_repository)
@@ -45,14 +48,13 @@ wishlist_usecase = ManageWishlistUsecase(
     sqlalchemy_event_repository,
     sqlalchemy_event_user_repository,
     bucket_client,
-    mailing_client,
 )
 events_usecase = ManageEventsUsecase(
     sqlalchemy_event_repository,
     sqlalchemy_event_user_repository,
     users_usecase,
     wishlist_usecase,
-    mailing_client,
+    gmail_mailing_repository,
 )
 
 blueprints = [
