@@ -1,9 +1,9 @@
 from sqlalchemy import select, and_, update
-
+from src.interfaces import IEventUserRepository
 from src.models import UserModel, EventModel
 
 
-class SQLAlchemyEventUsersRepository:
+class SQLAlchemyEventUsersRepository(IEventUserRepository):
     def __init__(self, sqlalchemy_client):
         self.session_factory = sqlalchemy_client.session_factory
 
