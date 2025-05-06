@@ -1,7 +1,6 @@
 from src.frameworks.db.seeds.commands import seed
 from src.frameworks.http.flask import create_flask_app
 from src.frameworks.db.sqlalchemy import SQLAlchemyClient
-from src.frameworks.bucket.client import BucketClient
 from src.frameworks.mail.client import MailingClient
 
 from src.repositories import (
@@ -27,10 +26,8 @@ from src.controllers import (
     create_wishlist_controller,
 )
 
-
 # Clients
 sqlalchemy_client = SQLAlchemyClient()
-bucket_client = BucketClient()
 mailing_client = MailingClient()
 
 # Repositories
@@ -39,7 +36,6 @@ sqlalchemy_event_repository = SQLAlchemyEventsRepository(sqlalchemy_client)
 sqlalchemy_wishlist_repository = SQLAlchemyWishlistRepository(sqlalchemy_client)
 sqlalchemy_event_user_repository = SQLAlchemyEventUsersRepository(sqlalchemy_client)
 gmail_mailing_repository = GmailEmailRepository(mailing_client)
-# TODO: definir un repositorio de upload de archivos
 
 # Usecases
 users_usecase = ManageUsersUsecase(sqlalchemy_user_repository)
@@ -47,7 +43,6 @@ wishlist_usecase = ManageWishlistUsecase(
     sqlalchemy_wishlist_repository,
     sqlalchemy_event_repository,
     sqlalchemy_event_user_repository,
-    bucket_client,
 )
 events_usecase = ManageEventsUsecase(
     sqlalchemy_event_repository,

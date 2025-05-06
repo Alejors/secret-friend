@@ -15,20 +15,6 @@ services:
     networks:
       - backend
 
-  ninja:
-    image: kcomlabs/s3ninja
-    ports:
-      - "${S3_PORT}:9444"
-    
-    environment:
-      - BUCKET_NAME=${BUCKET_NAME}
-
-    volumes:
-      - ./src/frameworks/bucket/documents/:/s3ninja/data/s3
-
-    networks:
-      - backend
-
   api:
     build: .
     container_name: ${DOCKER_SERVICE_NAME}
@@ -45,8 +31,6 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-      ninja:
-        condition: service_started
     networks:
       - backend
 
