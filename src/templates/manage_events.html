@@ -1,111 +1,115 @@
 {% extends "base.html" %}
-{% block title %}Administrar Eventos{% endblock title %}
+{% block title %}Manage Events{% endblock title %}
 {% block styles%}
 {% include 'css_html.html' %}
 {% endblock styles %}
 {% block content %}
-<div class="d-flex justify-between">
-  <div class="ms-5">
-    {% if current_event %}
-    <a href="{{url_for("event.events_view")}}"><button class="mb-5 p-1 event green" type="button">Nuevo Evento</button></a>
-    {% endif %}
-    {% if events %}
-    <h3>Eventos:</h3>
-    <br/>
-    <ul>
-      {% for event in events %}
-      <li><a href="{{url_for("event.events_view", event_id=event.id)}}">{{ event.name }}</a></li>
-      {% endfor %}
-    </ul>
-    {% else %}
-    <p>No hay ningún evento para administrar</p>
-    {% endif %}
-  </div>
-  <div>
-    <h3>Información del Evento:</h3>
-    <br/>
-    <form id="eventForm" action="{% if current_event %}{{url_for("event.events_view", event_id=current_event.id)}}{% else %}{{url_for("event.events_view")}}{% endif%}" method="POST">
-      <div>
-      {{ form.hidden_tag() }}
-      {{ form.name.label }} {{ form.name }}
-      {{ form.min_price.label }} {{ form.min_price }}
-      {{ form.max_price.label }} {{ form.max_price }}
-      </div>
-      <br/>
-      <div>
-        <fieldset id="users_fieldset" class="p-1">
-          <legend>Participantes</legend>
-          {% if not current_event.drawn %}
-          <button type="button" id="add_user_button" class="plus_button purple">+</button>
-          {% endif %}
-          {% if current_event.users|length > 0 %}
-          {% for participant in current_event.users %}
-          <div id="user{{loop.index-1}}" class="user d-flex justify-evenly mb-5">
-            <div>
-              <label for="user{{loop.index-1}}_name">Nombre:</label>
-              <input type="text" id="user{{loop.index-1}}_name" name="users[{{loop.index-1}}][name]" value="{{participant.name}}">
-            </div>
-            <div>
-              <label for="user{{loop.index-1}}_email">Email:</label>
-              <input type="email" id="user{{loop.index-1}}_email" name="users[{{loop.index-1}}][email]" value="{{participant.email}}">
-            </div>
-            {% if not current_event.drawn %}
-            <button type="button" class="eliminar" data-id="user{{loop.index-1}}">Eliminar</button>
+<div class="row d-flex justify-content-center mb-4">
+    <div class="col col-md-6">
+        <h1 class="text-center">Manage Events</h1>
+    </div>
+</div>
+<div class="row d-flex justify-content-between">
+    <div class="col col-md-3">
+        <div class="ms-5">
+            {% if current_event %}
+                <a href="{{url_for("event.events_view")}}"><button class="btn btn-success mb-3" type="button">New Event</button></a>
             {% endif %}
-          </div>
-          {% endfor %}
-          {% else %}
-          <div id="user0" class="user d-flex justify-evenly mb-5">
-            <div>
-              <label for="user0_name">Nombre:</label>
-              <input type="text" id="user0_name" name="users[0][name]">
-            </div>
-            <div>
-              <label for="user0_email">Email:</label>
-              <input type="email" id="user0_email" name="users[0][email]">
-            </div>
-            {% if not current_event.drawn %}
-            <button type="button" class="eliminar" data-id="user0">Eliminar</button>
+            {% if events %}
+                <h3 class="mb-3">Events:</h3>
+                <ul class="bg-light p-5">
+                {% for event in events %}
+                    <li class="mb-2"><a href="{{url_for("event.events_view", event_id=event.id)}}">{{ event.name }}</a></li>
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>No Event to Manage</p>
             {% endif %}
-          </div>
-          {% endif %}
-        </fieldset>
-      </div>
-      <br/>
-      {% if current_event %}
-        {% if not current_event.drawn %}
-        {{ form.update }}
-        {% else %}
-        <strong style="color: white;">Este evento ya fue sorteado.<br/> No puede actualizarse!</strong>
+        </div>
+    </div>
+    <div class="col col-md-5">
+        <h3>Event Information</h3>
+        <form class="bg-secondary p-3" id="eventForm" action="{% if current_event %}{{url_for("event.events_view", event_id=current_event.id)}}{% else %}{{url_for("event.events_view")}}{% endif%}" method="POST">
+        <div class="form-group">
+            {{ form.hidden_tag() }}
+            {{ form.name.label(class="form-label text-light") }} {{ form.name }}
+            {{ form.min_price.label(class="form-label text-light") }} {{ form.min_price }}
+            {{ form.max_price.label(class="form-label text-light") }} {{ form.max_price }}
+        </div>
+        <div>
+            <fieldset id="users_fieldset" class="p-1">
+            <legend class="text-light">Participants</legend>
+            {% if not current_event.drawn %}
+                <button type="button" id="add_user_button" class="plus_button purple">+</button>
+            {% endif %}
+            {% if current_event.users|length > 0 %}
+                {% for participant in current_event.users %}
+                <div id="user{{loop.index-1}}" class="d-flex justify-content-evenly mb-2">
+                    <div>
+                        <label class="form-label text-light" for="user{{loop.index-1}}_name">Name:</label>
+                        <input class="form-control " type="text" id="user{{loop.index-1}}_name" name="users[{{loop.index-1}}][name]" value="{{participant.name}}" disabled>
+                    </div>
+                    <div>
+                        <label class="form-label text-light" for="user{{loop.index-1}}_email">Email:</label>
+                        <input class="form-control" type="email" id="user{{loop.index-1}}_email" name="users[{{loop.index-1}}][email]" value="{{participant.email}}" disabled>
+                    </div>
+                    {% if not current_event.drawn %}
+                        <button type="button" class="btn btn-danger" data-id="user{{loop.index-1}}">Eliminar</button>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            {% else %}
+                <div id="user0" class="d-flex justify-content-evenly mb-2">
+                    <div>
+                        <label class="form-label text-light" for="user0_name">Name:</label>
+                        <input class="form-control" type="text" id="user0_name" name="users[0][name]">
+                    </div>
+                    <div>
+                        <label class="form-label text-light" for="user0_email">Email:</label>
+                        <input class="form-control" type="email" id="user0_email" name="users[0][email]">
+                    </div>
+                    {% if not current_event.drawn %}
+                        <button type="button" class="btn btn-danger" data-id="user0">Delete</button>
+                    {% endif %}
+                </div>
+            {% endif %}
+            </fieldset>
+        </div>
+            <br/>
+            {% if current_event %}
+                {% if not current_event.drawn %}
+                {{ form.update }}
+                {% else %}
+                <strong style="color: white;">Event Already Drawn.<br/> Cannot be Updated!</strong>
+                {% endif %}
+            {% else %}
+                {{ form.create }}
+            {% endif %}
+            </form>
+            {% if form.errors %}
+            <br/>
+            {% for key, errors in form.errors.items() %}
+            <strong>{{ key | replace("min_price", "Precio Mínimo") | replace("max_price", "Precio Máximo") | replace("name", "Nombre") }}</strong>
+            <ul class="errors">
+                {% for error in errors %}
+                    <li> {{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endfor %}
+            <br/>
+            {% endif %}
+    </div>
+    <div class="col col-md-3">
+        {% if current_event %}
+            {% if not current_event.drawn %}
+                <a href="{{ url_for('event.draw_event', event_id=event_selected)}}">
+                    <button type="button" class="me-5 event purple">Draw Event!</button>
+                </a>
+            {% else %}
+                <h1 class="me-5">Event Already Drawn!</h1>
+            {% endif %}
         {% endif %}
-      {% else %}
-        {{ form.create }}
-      {% endif %}
-    </form>
-    {% if form.errors %}
-    <br/>
-    {% for key, errors in form.errors.items() %}
-    <strong>{{ key | replace("min_price", "Precio Mínimo") | replace("max_price", "Precio Máximo") | replace("name", "Nombre") }}</strong>
-    <ul class="errors">
-      {% for error in errors %}
-      <li> {{ error }}</li>
-      {% endfor %}
-    </ul>
-    {% endfor %}
-    <br/>
-    {% endif %}
-  </div>
-  <div>
-    {% if current_event %}
-      {% if not current_event.drawn %}
-      <a href="{{ url_for('event.draw_event', event_id=event_selected)}}">
-        <button type="button" class="me-5 event purple">Realizar Sorteo!</button>
-      </a>
-      {% else %}
-      <h1 class="me-5">Este evento ya se sorteó</h1>
-      {% endif %}
-    {% endif %}
-  </div>
+    </div>
 </div>
 <script>
   const fieldset = document.getElementById('users_fieldset');
@@ -114,17 +118,19 @@
   let userCount = parseInt(id.replace("user", "")) + 1;
   document.getElementById('add_user_button').addEventListener('click', function() {
     const newUserDiv = document.createElement('div');
-    newUserDiv.classList.add('user', 'd-flex', 'justify-evenly', 'mb-5');
+    newUserDiv.classList.add('user', 'd-flex', 'justify-content-evenly', 'mb-2');
     newUserDiv.id = `user${userCount}`;
     const nameDiv = document.createElement('div');
     const nameLabel = document.createElement('label');
     nameLabel.setAttribute('for', `user${userCount}_name`);
-    nameLabel.textContent = 'Nombre:';
+    nameLabel.textContent = 'Name:';
+    nameLabel.classList.add('form-label', 'text-light');
     const nameInput = document.createElement('input');
     nameInput.type = 'text';
     nameInput.id = `user${userCount}_name`;
     nameInput.name = `users[${userCount}][name]`;
     nameInput.required = true;
+    nameInput.classList.add('form-control');
     nameDiv.appendChild(nameLabel);
     nameDiv.appendChild(nameInput);
 
@@ -132,19 +138,22 @@
     const emailLabel = document.createElement('label');
     emailLabel.setAttribute('for', `user${userCount}_email`);
     emailLabel.textContent = 'Email:';
+    emailLabel.classList.add('form-label', 'text-light');
     const emailInput = document.createElement('input');
     emailInput.type = 'email';
     emailInput.id = `user${userCount}_email`;
     emailInput.name = `users[${userCount}][email]`;
     emailInput.required = true;
+    emailInput.classList.add('form-control');
     emailDiv.appendChild(emailLabel);
     emailDiv.appendChild(emailInput);
     
     const deleteButton = document.createElement('button');
     deleteButton.type = 'button';
-    deleteButton.classList.add('eliminar');
+    deleteButton.classList.add('btn');
+    deleteButton.classList.add('btn-danger');
     deleteButton.setAttribute('data-id', `user${userCount}`);
-    deleteButton.textContent = 'Eliminar';
+    deleteButton.textContent = 'Delete';
 
     deleteButton.addEventListener('click', function() {
       const userId = deleteButton.getAttribute('data-id');
