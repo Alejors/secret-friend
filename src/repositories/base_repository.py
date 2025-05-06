@@ -42,7 +42,7 @@ class SQLAlchemyBaseRepository(IDataRepository):
         data: dict,
     ):
         with self.session_factory() as session:
-            instance = self.query_class(**data)
+            instance = self.query_class.from_dict(data)
             session.add(instance)
             session.commit()
             if self.entity:
