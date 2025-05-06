@@ -4,42 +4,45 @@
 {% include 'css_html.html' %}
 {% endblock styles %}
 {% block content %}
-<div>
-  <h1> Perfil Personal </h1>
-  <br/>
-  <div>
+<div class="row justify-content-center">
+    <div class="col-6">
+        <h1 class="text-center">Perfil Personal</h1>
+    </div>
+</div>
+<div class="row">
+  <div class="col">
     <form action="{{url_for("profile.profile_view")}}" method="POST">
       {{ form.hidden_tag() }}
       <table class="white-seethrough">
         <tr>
-          <td>
+          <td class="p-2">
             {{ form.name.label }} 
           </td>
-          <td>
+          <td class="p-2">
             {{ form.name }}
           </td>
         </tr>
         <tr>
-          <td>
+          <td class="p-2">
             {{ form.email.label }}
           </td>
-          <td>
+          <td class="p-2">
             {{ form.email }}
           </td>
         </tr>
         <tr>
-          <td>
+          <td class="p-2">
             {{ form.current_password.label }}
           </td>
-          <td>
+          <td class="p-2">
             {{ form.current_password }}
           </td>
         </tr>
         <tr>
-          <td>
+          <td class="p-2">
             {{ form.new_password.label }}
           </td>
-          <td>
+          <td class="p-2">
             {{ form.new_password }}
           </td>
         </tr>
