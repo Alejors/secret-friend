@@ -1,4 +1,4 @@
 from .data_interface import IDataRepository
 from .event_user_interface import IEventUserRepository
-from .image_uploader import IImageUploader
 from .mailer_interface import IMailerRepository
+from .wishlist_interface import IWishlistRepository
