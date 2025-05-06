@@ -7,14 +7,14 @@
 <div class="d-flex justify-between">
   <div class="ms-5">
     {% if current_event %}
-    <a href="{{url_for("frontevent.events_view")}}"><button class="mb-5 p-1 event green" type="button">Nuevo Evento</button></a>
+    <a href="{{url_for("event.events_view")}}"><button class="mb-5 p-1 event green" type="button">Nuevo Evento</button></a>
     {% endif %}
     {% if events %}
     <h3>Eventos:</h3>
     <br/>
     <ul>
       {% for event in events %}
-      <li><a href="{{url_for("frontevent.events_view", event_id=event.id)}}">{{ event.name }}</a></li>
+      <li><a href="{{url_for("event.events_view", event_id=event.id)}}">{{ event.name }}</a></li>
       {% endfor %}
     </ul>
     {% else %}
@@ -24,7 +24,7 @@
   <div>
     <h3>Información del Evento:</h3>
     <br/>
-    <form id="eventForm" action="{% if current_event %}{{url_for("frontevent.events_view", event_id=current_event.id)}}{% else %}{{url_for("frontevent.events_view")}}{% endif%}" method="POST">
+    <form id="eventForm" action="{% if current_event %}{{url_for("event.events_view", event_id=current_event.id)}}{% else %}{{url_for("event.events_view")}}{% endif%}" method="POST">
       <div>
       {{ form.hidden_tag() }}
       {{ form.name.label }} {{ form.name }}
@@ -98,7 +98,7 @@
   <div>
     {% if current_event %}
       {% if not current_event.drawn %}
-      <a href="{{ url_for('frontevent.draw_event', event_id=event_selected)}}">
+      <a href="{{ url_for('event.draw_event', event_id=event_selected)}}">
         <button type="button" class="me-5 event purple">Realizar Sorteo!</button>
       </a>
       {% else %}
