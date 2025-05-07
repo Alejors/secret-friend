@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from src.entities import Wish, Event, User
 from src.interfaces import IDataRepository, IWishlistRepository
 from src.repositories import SQLAlchemyEventUsersRepository
@@ -19,10 +21,10 @@ class ManageWishlistUsecase:
         filter = {"user_id": user_id, "deleted_at": None}
         return self._wishlist_repository.get(filters=filter)
 
-    def get_wish_by_user_and_element(
-        self, user_id: int, element: str
+    def get_wish_by_user_and_id(
+        self, user_id: int, element_id: int
     ) -> Wish:
-        filter = {"user_id": user_id, "element": element}
+        filter = {"user_id": user_id, "id": element_id}
         return self._wishlist_repository.get(filters=filter, first_only=True)
 
     def get_event_by_id(self, event_id: int) -> Event:
@@ -32,16 +34,35 @@ class ManageWishlistUsecase:
     def get_who_picked(self, user_id: int, event_id: int) -> User:
         return self._event_users_repository.get_who_picked_id(user_id, event_id)
 
-    def create_or_update_wishes(
+    def create(
         self, user_id: int, data: list[dict]
     ) -> tuple[list[Wish] | None, str | None]:
         try:
+            wishes = []
             for element in data:
                 if element["element"] is None or element["element"] == "":
                     continue
                 element["user_id"] = user_id
-                self._wishlist_repository.insert(element)
-            return "OK", None
+                wish_inserted = self._wishlist_repository.insert(element)
+                wishes.append(wish_inserted)
+            return wishes, None
+        except Exception as e:
+            print(e)
+            return None, str(e)
+        
+    def update(self, wish_id: int, data: dict) -> tuple[Wish | None, str | None]:
+        try:
+            wish = self._wishlist_repository.update(wish_id, data)
+            return wish, None
+        except Exception as e:
+            print(e)
+            return None, str(e)
+        
+    def delete(self, wish_id: int) -> tuple[None, str | None]:
+        data = {"deleted_at": datetime.now()}
+        try:
+            self.update(wish_id, data)
+            return None, None
         except Exception as e:
             print(e)
             return None, str(e)
