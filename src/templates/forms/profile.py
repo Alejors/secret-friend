@@ -4,9 +4,9 @@ from wtforms.validators import DataRequired, optional, Regexp
 
 
 class ProfileForm(FlaskForm):
-  name = StringField('Nombre', validators=[DataRequired()])
+  name = StringField('Name', validators=[DataRequired()])
   email = StringField('Email', render_kw={'disabled': 'disabled'})
-  current_password = PasswordField('Contraseña Actual', validators=[DataRequired()])
-  new_password = PasswordField('Nueva Contraseña', validators=[optional(), Regexp(r"^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,12}$", message="La contraseña debe tener entr 8 y 12 caracteres, al menos 1 mayúscula y al menos 1 número!")])
+  current_password = PasswordField('Current Password', validators=[DataRequired()])
+  new_password = PasswordField('New Password', validators=[optional(), Regexp(r"^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,12}$", message="The Password must include: 8 to 12 characters, at least 1 capital letter and at least 1 digit!")])
   
-  submit = SubmitField('Actualizar')
+  submit = SubmitField('Update Profile')
