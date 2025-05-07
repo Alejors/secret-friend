@@ -1,78 +1,85 @@
 {% extends "base.html" %}
-{% block title %}Listas de Deseos{% endblock title %}
-{% block styles%}
-{% include 'css_html.html' %}
-{% endblock styles %}
+{% block title %}Wishlist{% endblock title %}
 {% block content %}
 <div class="row mb-3 justify-content-center">
     <div class="col-6">
-        <h1 class="text-center">Mi Lista de Deseos</h1>
+        <h1 class="text-center">My Wishlist</h1>
     </div>
 </div>
 <div class="row">
-  <div class="col col-md-6">
-    <h2 class="mb-3"> Regalos </h2>
-    <table class="table table-warning">
-      <thead>
-        <tr class="text-center">
-          <th scope="col">Regalo</th>
-          <th scope="col">Precio</th>
-          <th scope="col">URL de ejemplo</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for item in wishlist %}
-          <tr class="align-middle p-2">
-            <td><strong>{{ item.element }}</strong></td>
-            <td class="text-muted">
-            {% if item.price %}
-              Precio: ${{ item.price }}
-            {% endif %}
-            </td>
-            <td>
-            {% if item.url %}
-              <a class="text-success" href="{{ item.url }}" target="_blank">Ver URL</a>
-            {% endif %}
-            </td>
-          </tr>
-        {% endfor %}
-    </table>
-  </div>
-  <div class="col col-md-6">
-    <div class="d-flex justify-content-between mb-3">
-      <h2> Agregar Ideas de Regalo</h2>
-      <button type="button" id="addRowButton" class="btn btn-round btn-success">&nbsp;+&nbsp;</button>
+    <div class="col col-md-6">
+        <h2 class="mb-3 text-light"> Wishes </h2>
+        <table class="table table-warning">
+            <thead>
+                <tr class="text-center">
+                <th scope="col">Wish</th>
+                <th scope="col">Price</th>
+                <th scope="col">Example URL</th>
+                <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in wishlist %}
+                <tr class="align-middle p-2">
+                    <td><strong>{{ item.element }}</strong></td>
+                    <td class="text-muted text-center">
+                    {% if item.price %}
+                        ${{ item.price }}
+                    {% else %}
+                        <span class="text-danger">No Price</span>
+                    {% endif %}
+                    </td>
+                    <td class="text-center">
+                        {% if item.url %}
+                        <a class="text-success" href="{{ item.url }}" target="_blank">See Example</a>
+                        {% else %}
+                        <span class="text-danger">No URL</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        <form action="{{ url_for('wishlist.delete_item', item_id=item.id) }}" method="POST">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-    <form action="{{ url_for("wishlist.wishlist_view", event_id=event_selected) }}" id="wishlistForm" method="POST" enctype="multipart/form-data">
-      {{ wishlist_form.hidden_tag() }}
-      <table class="table table-info" id="wishlistTable">
-        <thead>
-          <tr class="text-center">
-            <th scope="col">Idea de Regalo</th>
-            <th scope="col"> Precio </th>
-            <th scope="col"> URL de ejemplo </th>
-            <!--<th scope="col"> Imagen </th>-->
-            <th scope="col"> Acciones </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="align-middle p-2">
-            <td><input type="text" name="items-0-element" class="form-control" size="20" /></td>
-            <td><input type="number" name="items-0-price" class="form-control" min="0"/></td>
-            <td><input type="url" name="items-0-url" class="form-control" /></td>
-            <!--<td>
-              <label for="image" class="form-label">Carga una imagen</label>
-              <input type="file" name="items-0-image" class="form-control-file" accept="image/*" />
-              <br/>
-              <small class="form-text text-muted">Formato: JPG, PNG, GIF</small>
-            </td>-->
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
-      {{ wishlist_form.submit }}
-    </form>
-  </div>
+    <div class="col col-md-6">
+        <div class="d-flex justify-content-between mb-3">
+            <h2 class="text-light">Add Wish to List</h2>
+            <button type="button" id="addRowButton" class="btn btn-success btn-sm">&nbsp;+&nbsp;</button>
+        </div>
+        <form action="{{ url_for("wishlist.wishlist_view", event_id=event_selected) }}" id="wishlistForm" method="POST" enctype="multipart/form-data">
+            {{ wishlist_form.hidden_tag() }}
+            <table class="table table-info" id="wishlistTable">
+                <thead>
+                    <tr class="text-center">
+                        <th scope="col">{{ wishlist_form.items[0].element.label }}</th>
+                        <th scope="col">{{ wishlist_form.items[0].price.label }}</th>
+                        <th scope="col">{{ wishlist_form.items[0].url.label }}</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="align-middle p-2">
+                        <td>
+                            <input type="text" name="items-0-element" class="form-control" size="20" />
+                        </td>
+                        <td>
+                            <input type="number" name="items-0-price" class="form-control" min="0"/>
+                        </td>
+                        <td>
+                            <input type="url" name="items-0-url" class="form-control" />
+                        </td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+            {{ wishlist_form.submit }}
+        </form>
+    </div>
 </div>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
@@ -88,13 +95,7 @@
         <td><input type="text" name="items-${rowIndex}-element" class="form-control" size="20" /></td>
         <td><input type="number" name="items-${rowIndex}-price" class="form-control" min="0"/></td>
         <td><input type="url" name="items-${rowIndex}-url" class="form-control" /></td>
-        <!--<td>
-          <label for="items-${rowIndex}-image" class="form-label">Carga una imagen</label>
-          <input type="file" name="items-${rowIndex}-image" class="form-control-file" accept="image/*" />
-          <br/>
-          <small class="form-text text-muted">Formato: JPG, PNG, GIF</small>
-        </td>-->
-        <td><button type="button" class="btn btn-danger btn-sm deleteRowButton">Eliminar</button></td>
+        <td><button type="button" class="btn btn-danger btn-sm deleteRowButton">Delete</button></td>
       `;
       wishlistTable.appendChild(newRow);
       rowIndex++;
