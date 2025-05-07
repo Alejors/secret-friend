@@ -37,15 +37,15 @@ def create_event_controller(events_usecase: ManageEventsUsecase):
         "users": users
       }
       if len(users) < 3:
-        error = "Se requiere al menos 3 participantes para un evento!"
+        error = "At Least 3 Participants Required!"
       else:
         if event_selected:
           _, error = events_usecase.update_event(user_id, event_selected, event_data)
-          flash("Evento Actualizado", "success")
+          flash("Event Updated", "success")
         else:
           event_data["owner_id"] = user_id
           _, error = events_usecase.create_event(event_data)
-          flash("Evento Creado", "success")
+          flash("Event Created", "success")
       if error:
         flash(error, "error")
         return redirect(url_for("event.events_view", event_id=event_selected))
@@ -79,12 +79,12 @@ def create_event_controller(events_usecase: ManageEventsUsecase):
     
     if not event_id or not user_id:
       drawn = None
-      error = "Error: Información Necesaria No Llegó"
+      error = "Error: Not enough data to draw the event"
     else:
       drawn, error = events_usecase.draw_event(user_id, event_id)
       
     if drawn:
-      flash("Sorteo Realizado!", "success")
+      flash("Event Drawn!", "success")
       return redirect(url_for("home.home_view"))
     else:
       flash(error, "error")
