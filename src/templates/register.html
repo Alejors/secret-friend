@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Registro{% endblock title %}
+{% block title %}Register{% endblock title %}
 {% block content %}
 <div class="login_form">
   <form method="POST" action="{{ url_for('landing.register_view') }}">
@@ -43,6 +43,6 @@
     {% endif %}
     {{ form.submit }}
   </form>
-  <p class="sign_up">Ya tienes una cuenta? <a href="{{ url_for('landing.login_view') }}">Inicia Sesión</a></p>
+  <p class="sign_up">Already Have an Account? <a href="{{ url_for('landing.login_view') }}">Log In</a></p>
 </div>
 {% endblock content %}

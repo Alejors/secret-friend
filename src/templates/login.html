@@ -6,7 +6,7 @@
     <div class="login_form">
         <form method="POST" action="{{ url_for('landing.login_view') }}">
         {{ form.csrf_token }}
-        <h3>Inicia Sesión</h3>
+        <h3>Log In</h3>
         <div class="input_box">
             {{ form.email.label }} {{ form.email }}
             {% if form.email.errors %}
@@ -24,7 +24,7 @@
             {{ form.password }}
         </div>
         {{ form.submit }}
-        <p class="sign_up">No tienes una cuenta? <a href="{{ url_for('landing.register_view') }}">Registrarse</a></p>
+        <p class="sign_up">You don't have an Account? <a href="{{ url_for('landing.register_view') }}">Register</a></p>
         </form>
     </div>
 </div>
