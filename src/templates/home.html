@@ -24,7 +24,7 @@
                 <h4 class="text-center">You are <strong>{{event_pick.name}}'s</strong> Secret Santa!</h4>
             </div>
             {% if wishlist %}
-                <div class="me-25">   
+                <div class="me-25">
                     <table class="table table-success" >
                         <thead class="text-center">
                             <tr>
@@ -85,13 +85,4 @@
     {% endif %}
   </div>
 </div>
-<script>
-  const selectElement = document.getElementById("events");
-  selectElement.addEventListener("change", function () {
-    const selectedValue = selectElement.value;
-    if (selectedValue) {
-      window.location.href = {{url_for('home.home_view', event_id=selectedValue)}}`;
-    }
-  });
-</script>
 {% endblock content %}
