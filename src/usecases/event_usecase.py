@@ -133,9 +133,9 @@ class ManageEventsUsecase:
     def draw_event(self, user_id: int, event_id: int) -> tuple[bool, str|None]:
         event = self.get_by_owner_id_and_event_id(user_id, event_id)
         if not event:
-            return False, "Este evento no le pertenece a este usuario."
+            return False, "User is Not this Event's Manager."
         if event.drawn:
-            return False, "El evento ya fue sorteado!"
+            return False, "Event Already Drawn!"
         
         # listamos todos los participantes del concurso
         event_participants_ids = [participant.id for participant in event.users]
@@ -166,28 +166,31 @@ class ManageEventsUsecase:
             for participant in event_participants_ids:
                 self._event_users_repository.update_participation(participant, event.id, remove_pick)
             self._events_repository.update(event.id, {"drawn": False})
-            print("ERROR: ", e)
-            return False, f"Se retrocede. Ocurrió un error: {str(e)}"
+            print("Error: ", e)
+            return False, f"Rolled Back. An Error Occurred: {str(e)}"
         try:
             self._send_event_drawn_mail(event_participants_ids, event)
         except Exception as e:
-            print("ERROR: ", e)
-            return False, f"Se realizó el sorteo, pero hubo un error al enviar los correos: {str(e)}"
+            print("Error: ", e)
+            return False, f"Event Drawn, but there were Errors While Sending the Emails: {str(e)}"
         return True, None
 
     def get_pick_from_event(self, user_id: int, event_id: int) -> tuple[User|None, list[Wish]|None, str|None]:
         event = self.get_event_by_id(event_id)
         if not event:
-            return None, None, "Evento no encontrado"
+            return None, None, "Event Not Found"
         if user_id not in [participant.id for participant in event.users]:
-            return None, None, "Este usuario no está en este evento"
+            return None, None, "User Not Found in Event"
         if not event.drawn:
-            return None, None, "El evento no se ha sorteado aún"
+            return None, None, "The Event Has Not Been Drawn Yet"
+        
         pick_user = self._event_users_repository.get_pick(user_id, event_id)
         if pick_user:
-            wishlist = self._wishlist_usecase.get_wishlist_by_user(pick_user.id)
+            wishlist, error = self._wishlist_usecase.get_wishlist_by_range(event, pick_user)
+            if error:
+                return None, None, error
             return pick_user, wishlist, None
-        return None, None, "Usuario no encontrado"
+        return None, None, "User Not Found"
     
     def get_events_by_user_id(self, user_id: int) -> list[Event]:
         return self._event_users_repository.get_events_by_participant(user_id)
