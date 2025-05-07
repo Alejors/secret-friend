@@ -111,87 +111,88 @@
     </div>
 </div>
 <script>
-    const eventDrawn = {{ current_event.drawn|tojson }};
-    
-    if (!eventDrawn) {
-        const deleteButtons = document.querySelectorAll('button[data-id]');
-        deleteButtons.forEach((button) => {
-            button.addEventListener('click', () => {
-                const userId = button.getAttribute('data-id');
+    {% if current_event %}
+        const eventDrawn = {{ current_event.drawn|tojson }};
+        if (!eventDrawn) {
+            const deleteButtons = document.querySelectorAll('button[data-id]');
+            deleteButtons.forEach((button) => {
+                button.addEventListener('click', () => {
+                    const userId = button.getAttribute('data-id');
+                    const userElement = document.getElementById(userId);
+                    userElement.remove();
+                });
+            });
+            const fieldset = document.getElementById('users_fieldset');
+            const lastChild = fieldset.lastElementChild;
+            let id = lastChild.id;
+            let userCount = parseInt(id.replace("user", "")) + 1;
+            document.getElementById('add_user_button').addEventListener('click', function() {
+                const newUserDiv = document.createElement('div');
+                newUserDiv.classList.add('user', 'd-flex', 'justify-content-evenly', 'mb-2');
+                newUserDiv.id = `user${userCount}`;
+                const nameDiv = document.createElement('div');
+                const nameLabel = document.createElement('label');
+                nameLabel.setAttribute('for', `user${userCount}_name`);
+                nameLabel.textContent = 'Name:';
+                nameLabel.classList.add('form-label', 'text-light');
+                const nameInput = document.createElement('input');
+                nameInput.type = 'text';
+                nameInput.id = `user${userCount}_name`;
+                nameInput.name = `users[${userCount}][name]`;
+                nameInput.required = true;
+                nameInput.classList.add('form-control');
+                nameDiv.appendChild(nameLabel);
+                nameDiv.appendChild(nameInput);
+
+                const emailDiv = document.createElement('div');
+                const emailLabel = document.createElement('label');
+                emailLabel.setAttribute('for', `user${userCount}_email`);
+                emailLabel.textContent = 'Email:';
+                emailLabel.classList.add('form-label', 'text-light');
+                const emailInput = document.createElement('input');
+                emailInput.type = 'email';
+                emailInput.id = `user${userCount}_email`;
+                emailInput.name = `users[${userCount}][email]`;
+                emailInput.required = true;
+                emailInput.classList.add('form-control');
+                emailDiv.appendChild(emailLabel);
+                emailDiv.appendChild(emailInput);
+                
+                const deleteButton = document.createElement('button');
+                deleteButton.type = 'button';
+                deleteButton.classList.add('btn');
+                deleteButton.classList.add('btn-danger');
+                deleteButton.setAttribute('data-id', `user${userCount}`);
+                deleteButton.textContent = 'Delete';
+
+                deleteButton.addEventListener('click', function() {
+                const userId = deleteButton.getAttribute('data-id');
                 const userElement = document.getElementById(userId);
                 userElement.remove();
-            });
-        });
-        const fieldset = document.getElementById('users_fieldset');
-        const lastChild = fieldset.lastElementChild;
-        let id = lastChild.id;
-        let userCount = parseInt(id.replace("user", "")) + 1;
-        document.getElementById('add_user_button').addEventListener('click', function() {
-            const newUserDiv = document.createElement('div');
-            newUserDiv.classList.add('user', 'd-flex', 'justify-content-evenly', 'mb-2');
-            newUserDiv.id = `user${userCount}`;
-            const nameDiv = document.createElement('div');
-            const nameLabel = document.createElement('label');
-            nameLabel.setAttribute('for', `user${userCount}_name`);
-            nameLabel.textContent = 'Name:';
-            nameLabel.classList.add('form-label', 'text-light');
-            const nameInput = document.createElement('input');
-            nameInput.type = 'text';
-            nameInput.id = `user${userCount}_name`;
-            nameInput.name = `users[${userCount}][name]`;
-            nameInput.required = true;
-            nameInput.classList.add('form-control');
-            nameDiv.appendChild(nameLabel);
-            nameDiv.appendChild(nameInput);
+                });
 
-            const emailDiv = document.createElement('div');
-            const emailLabel = document.createElement('label');
-            emailLabel.setAttribute('for', `user${userCount}_email`);
-            emailLabel.textContent = 'Email:';
-            emailLabel.classList.add('form-label', 'text-light');
-            const emailInput = document.createElement('input');
-            emailInput.type = 'email';
-            emailInput.id = `user${userCount}_email`;
-            emailInput.name = `users[${userCount}][email]`;
-            emailInput.required = true;
-            emailInput.classList.add('form-control');
-            emailDiv.appendChild(emailLabel);
-            emailDiv.appendChild(emailInput);
-            
-            const deleteButton = document.createElement('button');
-            deleteButton.type = 'button';
-            deleteButton.classList.add('btn');
-            deleteButton.classList.add('btn-danger');
-            deleteButton.setAttribute('data-id', `user${userCount}`);
-            deleteButton.textContent = 'Delete';
+                newUserDiv.appendChild(nameDiv);
+                newUserDiv.appendChild(emailDiv);
+                newUserDiv.appendChild(deleteButton);
 
-            deleteButton.addEventListener('click', function() {
-            const userId = deleteButton.getAttribute('data-id');
-            const userElement = document.getElementById(userId);
-            userElement.remove();
+                const fieldset = document.getElementById('users_fieldset');
+                fieldset.appendChild(newUserDiv);
+                userCount++;
             });
 
-            newUserDiv.appendChild(nameDiv);
-            newUserDiv.appendChild(emailDiv);
-            newUserDiv.appendChild(deleteButton);
-
-            const fieldset = document.getElementById('users_fieldset');
-            fieldset.appendChild(newUserDiv);
-            userCount++;
-        });
-
-        document.querySelectorAll('.eliminar').forEach(function(button) {
-            button.addEventListener('click', function() {
-                const itemId = this.getAttribute('data-id');
-                const item = document.getElementById(itemId);
-                item.remove();
+            document.querySelectorAll('.eliminar').forEach(function(button) {
+                button.addEventListener('click', function() {
+                    const itemId = this.getAttribute('data-id');
+                    const item = document.getElementById(itemId);
+                    item.remove();
+                });
             });
-        });
-    } else {
-        const inputFields = document.querySelectorAll('input');
-        inputFields.forEach(function(input) {
-            input.setAttribute('disabled', 'disabled');
-        });
-    }
+        } else {
+            const inputFields = document.querySelectorAll('input');
+            inputFields.forEach(function(input) {
+                input.setAttribute('disabled', 'disabled');
+            });
+        }
+    {% endif %}
 </script>
 {% endblock content%}
