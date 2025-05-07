@@ -4,9 +4,8 @@ from flask import url_for, redirect, flash, render_template, Blueprint, request
 from flask_jwt_extended import get_jwt_identity, jwt_required
 
 from src.usecases import ManageWishlistUsecase, ManageEventsUsecase
-from src.templates.forms import WishlistForm
+from src.templates.forms import WishlistForm, ItemForm
 
-#TODO: crear la acción para actualizar regalos individuales
 def create_wishlist_controller(
     wishlists_usecase: ManageWishlistUsecase, 
     events_usecase: ManageEventsUsecase
@@ -57,6 +56,37 @@ def create_wishlist_controller(
             wishlist=wishlist,
             wishlist_form=wishlist_form,
         )
+
+    @blueprint.route("/edit_item", methods=["GET", "POST"])
+    @jwt_required()
+    def edit_item():
+        user_id = int(get_jwt_identity())
+        item_id = request.args.get("item_id")
+        if not item_id:
+            flash("Item ID is required", "error")
+            return redirect(url_for("home.home_view"))
+        wish = wishlists_usecase.get_wish_by_user_and_id(user_id, item_id)
+        if not wish:
+            flash("Item not found", "error")
+            return redirect(url_for("wishlist.wishlist_view"))
+        if request.method == "POST":
+            data = request.form
+            wish_data = {
+                "element": data["element"],
+                "price": int(data["price"]) if data["price"] != "" else None,
+                "url": data["url"],
+            }
+            _, error = wishlists_usecase.update(wish.id, wish_data)
+            if error:
+                flash(f"An Error Occurred: {error}", "error")
+            else:
+                flash(f"Item Updated", "success")
+            return redirect(url_for("wishlist.wishlist_view"))
+        item_form = ItemForm()
+        item_form.element.data = wish.element
+        item_form.price.data = wish.price
+        item_form.url.data = wish.url
+        return render_template("edit_item.html", wish=wish, item_form=item_form)
 
     @blueprint.route("/delete-item", methods=["POST"])
     @jwt_required()

@@ -6,6 +6,7 @@ class ItemForm(FlaskForm):
   element = StringField('Gift Idea:')
   price = IntegerField('Price:')
   url = StringField('Example URL: ')
+  submit = SubmitField('Update Item')
 
 class WishlistForm(FlaskForm):
   items = FieldList(FormField(ItemForm), min_entries=1)

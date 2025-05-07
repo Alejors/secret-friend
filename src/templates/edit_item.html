@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Edit Wish{% endblock title %}
+{% block content %}
+<div class="row justify-content-center mb-3">
+    <div class="col-6">
+        <h1 class="text-center">Edit Wish</h1>
+    </div>
+</div>
+<div class="row d-flex justify-content-center">
+    <div class="col col-md-4">
+        <form action="{{url_for("wishlist.edit_item", item_id=wish.id)}}" method="POST">
+        {{ item_form.hidden_tag() }}
+        <table class="table table-light">
+            <thead class="text-center">
+                <tr>
+                    <th scope="col">Attribute</th>
+                    <th scope="col">Value</th>
+                </tr>
+            </thead>
+            <tbody class="align-middle">
+                <tr>
+                <td class="p-2">
+                    {{ item_form.element.label }} 
+                </td>
+                <td class="p-2 text-center">
+                    {{ item_form.element(class="form-control") }}
+                </td>
+                </tr>
+                <tr>
+                <td class="p-2">
+                    {{ item_form.price.label }}
+                </td>
+                <td class="p-2 text-center">
+                    {{ item_form.price(class="form-control") }}
+                </td>
+                </tr>
+                <tr>
+                <td class="p-2">
+                    {{ item_form.url.label }}
+                </td>
+                <td class="p-2 text-center">
+                    {{ item_form.url(class="form-control") }}
+                </td>
+                </tr>
+                <tr>
+                <td class="text-center" colspan=2>
+                    {{ item_form.submit }}
+                </td>
+                </tr>
+            </tbody>
+        </table>
+        </form>
+    <div>
+</div>
+{% endblock content%}
