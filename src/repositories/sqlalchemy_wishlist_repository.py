@@ -9,10 +9,11 @@ class SQLAlchemyWishlistRepository(SQLAlchemyBaseRepository):
         
     def get_wishlist_by_range(self, user_id: int, min_price: int|None, max_price: int|None) -> list[Wish]:
         filter = {"user_id": user_id, "deleted_at": None}
+        special_filters = []
         if min_price and max_price:
-            filter["price"] = {"$gte": min_price, "$lte": max_price}
+            special_filters.append(WishModel.price.between(min_price, max_price))
         elif min_price:
-            filter["price"] = {"$gte": min_price}
+            special_filters.append(WishModel.price >= min_price)
         elif max_price:
-            filter["price"] = {"$lte": max_price}
-        return self.get(filters=filter)
+            special_filters.append(WishModel.price <= max_price)
+        return self.get(filters=filter, special_filters=special_filters)
