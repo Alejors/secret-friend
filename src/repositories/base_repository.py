@@ -18,6 +18,7 @@ class SQLAlchemyBaseRepository(IDataRepository):
         self,
         *,
         filters: dict = None,
+        special_filters: list = None,
         first_only: bool = False,
     ):
         with self.session_factory() as session:
@@ -25,6 +26,9 @@ class SQLAlchemyBaseRepository(IDataRepository):
 
             if filters:
                 query = query.filter_by(**filters)
+            
+            if special_filters:
+                query = query.filter(*special_filters)
 
             if first_only:
                 results = query.first()
