@@ -1,73 +1,88 @@
 {% extends "base.html" %}
 {% block title %}Home{% endblock title %}
-{% block styles%}
-{% include 'css_html.html' %}
-{% endblock styles %}
 {% block content %}
-<div>
-  <div>
-    <h1>Bienvenido, <strong>{{ user.name }}</strong>!</h1>
-  </div>
-  </br>
-  <div class="d-flex justify-between">
-    <div class="ms-5">
-      <h3>Mis Concursos:</h3>
-      <br/>
-      {% if events %}
-      <ul>
-        {% for event in events %}
-        <li><a href="{{url_for("home.home_view", event_id=event.id)}}">{{ event.name }}</a></li>
-        <br/>
-        {% endfor %}
-      </ul>
-      {% endif %}
+<div class="row d-flex justify-content-center mb-5">
+    <div class="col-4">
+        <h1 class="text-center">Welcome, <strong>{{ user.name }}</strong>!</h1>
     </div>
-    {% if current_event.min_price or current_event.max_price %}
-    <div class="white-seethrough p-1" style="border: 2px black solid;">
-      <span>Te recordamos que este concurso:</span>
-      <ul class="ms-5">
-        <br/>
-        {% if current_event.min_price%}
-        <li>el valor <strong>mínimo</strong> del regalo es: <strong>${{current_event.min_price}}</strong></li>
-        <br/>
+</div>
+<div class="row d-flex justify-content-evenly">
+    <div class="col col-md-2 bg-light p-3">
+        <h3>My Events:</h3>
+        {% if events %}
+        <ul>
+            {% for event in events %}
+            <li><a href="{{url_for("home.home_view", event_id=event.id)}}">{{ event.name }}</a></li>
+            {% endfor %}
+        </ul>
         {% endif %}
-        {% if current_event.max_price%}
-        <li>el valor <strong>máximo</strong> del regalo es: <strong>${{current_event.max_price}}</strong></li>
-        {% endif %}
-      </ul>
     </div>
-    {% endif %}
-    {% if event_pick %}
-    <div class="d-flex align-center">
-      <p>Tu Amigo Secreto para {{current_event.name}} es:&nbsp;&nbsp;</p>
-      <h1>{{event_pick.name}}</h1>
-    </div>
-    <div class="me-25">   
-        {% if wishlist %}
-        <table class="white-seethrough" >
-          <tr>
-            <th>Descripción</th>
-            <th>Imagen de Referencia</th>
-          </tr>
-          {% for wish in wishlist %}
-          <tr>
-            <td class="p-1">{{wish.element}}</td>
-            <td class="p-1"><img class="wishlist" src="{{wish.url}}" alt="{{wish.element}}"></td>
-          </tr>
-          {% endfor %}
-        </table>
-        {% endif %}
+    <div class="col col-md-4 bg-warning p-3">
+        {% if event_pick %}
+            <div>
+                <h3>For <strong>{{current_event.name}}</strong>:</h3>
+                <h4 class="text-center">You are <strong>{{event_pick.name}}'s</strong> Secret Santa!</h4>
+            </div>
+            {% if wishlist %}
+                <div class="me-25">   
+                    <table class="table table-success" >
+                        <thead class="text-center">
+                            <tr>
+                                <th>Description</th>
+                                <th>Approximate Price</th>
+                                <th>Example's Link</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for wish in wishlist %}
+                            <tr>
+                                <td class="p-1">{{wish.element}}</td>
+                                <td class="p-1 text-center">
+                                    {% if wish.price %}
+                                        ${{wish.price}}
+                                    {% else %}
+                                        <span class="text-danger">No price set</span>
+                                    {% endif %}
+                                </td>
+                                <td class="p-1">
+                                    <a href="{{wish.url}}" target="_blank">Check the example</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
       {% else %}
         {% if current_event %}
-        <p> El concurso {{ current_event.name }} aún no se lanza </p>
+            <p>The Event <strong>{{ current_event.name }}</strong> Hasn't Been Drawn Yet!</p>
         {% else %}
-        <p> No hay ningún evento aún </p>
+            <p>You have No Events Yet!</p>
         {% endif %}
       {% endif %}
       {% if pick_error%}
-        <h3>Ups: {{pick_error}}</h3>
+        <h3>Oops: {{pick_error}}</h3>
       {% endif %}
     </div>
+    {% if current_event.min_price or current_event.max_price %}
+        <div class="col col-md-3 bg-secondary p-3">
+            <div class="white-seethrough p-1" style="border: 2px black solid;">
+                <p class="m-2">Remember:</p>
+                <ul class="ms-3">
+                    {% if current_event.min_price%}
+                    <li>
+                        The <strong>minimum</strong> gift price for this event is: <strong>${{current_event.min_price}}</strong>
+                    </li>
+                    {% endif %}
+                    {% if current_event.max_price%}
+                    <li>
+                        The <strong>maximum</strong> gift price for this event is: <strong>${{current_event.max_price}}</strong>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    {% endif %}
   </div>
 </div>
 <script>
