@@ -43,9 +43,7 @@ class ManageUsersUsecase:
         if not user_exists:
             return None, "User Not Found"
         try:
-            if data.get("password") and not check_password(
-                user_exists.password, data["password"]
-            ):
+            if data.get("password") and data["password"] != "":
                 data["password"] = hash_password(data["password"])
             user_updated = self._user_repository.update(user_id, data)
             return user_updated, None
