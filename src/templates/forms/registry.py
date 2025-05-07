@@ -1,11 +1,25 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import DataRequired, Email, Regexp
+from wtforms.validators import DataRequired, Email, Regexp, Length
+
+from src.utils import *
 
 
 class RegistryForm(FlaskForm):
-  name = StringField('Nombre', validators=[DataRequired()])
-  email = StringField('Email', validators=[DataRequired(), Email(message="Email no es válido.")])
-  password = PasswordField('Contraseña', validators=[DataRequired(), Regexp(r"^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,12}$", message="La contraseña debe tener entre 8 y 12 caracteres, al menos 1 mayúscula y al menos 1 número!")])
-  
-  submit = SubmitField('Registrarse')
+    name = StringField(
+        NAME_FIELD, validators=[DataRequired(), Length(min=NAME_LENGTH, message=NAME_FIELD_LENGTH_ERROR)]
+    )
+    email = StringField(
+        EMAIL_FIELD, validators=[DataRequired(), Email(message=EMAIL_FIELD_ERROR)]
+    )
+    password = PasswordField(
+        PASSWORD_FIELD,
+        validators=[
+            DataRequired(),
+            Regexp(
+                PASSWORD_REGEX, message=PASSWORD_REQUIREMENTS
+            ),
+        ],
+    )
+
+    submit = SubmitField("Sign Up")
