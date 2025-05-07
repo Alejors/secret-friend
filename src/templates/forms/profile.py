@@ -10,5 +10,15 @@ class ProfileForm(FlaskForm):
   email = StringField(EMAIL_FIELD, render_kw={'disabled': 'disabled'})
   current_password = PasswordField('Current Password', validators=[DataRequired()])
   new_password = PasswordField('New Password', validators=[optional(), Regexp(PASSWORD_REGEX, message=PASSWORD_REQUIREMENTS)])
+  repeat_password = PasswordField('Repeat New Password', validators=[optional()])
+  
+  def validate(self):
+    if not FlaskForm.validate(self):
+      return False
+    if self.new_password.data and self.repeat_password.data and self.new_password.data == self.repeat_password.data:
+      return True
+    self.new_password.errors.append("Password and Repeat Password do not Match!")
+    return False
+
   
   submit = SubmitField('Update Profile')

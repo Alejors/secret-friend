@@ -1,55 +1,119 @@
 {% extends "base.html" %}
 {% block title %}Profile{% endblock title %}
 {% block content %}
-<div class="row justify-content-center">
+<div class="row justify-content-center mb-4">
     <div class="col-6">
         <h1 class="text-center">User Profile</h1>
     </div>
 </div>
-<div class="row">
-  <div class="col">
-    <form action="{{url_for("profile.profile_view")}}" method="POST">
-      {{ form.hidden_tag() }}
-      <table class="white-seethrough">
-        <tr>
-          <td class="p-2">
-            {{ form.name.label }} 
-          </td>
-          <td class="p-2">
-            {{ form.name }}
-          </td>
-        </tr>
-        <tr>
-          <td class="p-2">
-            {{ form.email.label }}
-          </td>
-          <td class="p-2">
-            {{ form.email }}
-          </td>
-        </tr>
-        <tr>
-          <td class="p-2">
-            {{ form.current_password.label }}
-          </td>
-          <td class="p-2">
-            {{ form.current_password }}
-          </td>
-        </tr>
-        <tr>
-          <td class="p-2">
-            {{ form.new_password.label }}
-          </td>
-          <td class="p-2">
-            {{ form.new_password }}
-          </td>
-        </tr>
-        <tr>
-          <td colspan=2>
-            {{ form.submit }}
-          </td>
-        </tr>
-      </table>
-    </form>
-  <div>
+<div class="row d-flex justify-content-center">
+    <div class="col col-md-6">
+        <form action="{{url_for("profile.profile_view")}}" method="POST">
+        {{ form.hidden_tag() }}
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th class="text-center">
+                        Information
+                    </th>
+                    <th class="text-center">
+                        Value
+                    </th>
+                </tr>
+                </thead>
+                <tbody class="align-middle">
+                    <tr>
+                        <td class="p-2">
+                            {{ form.name.label }} 
+                        </td>
+                        <td class="p-2">
+                            {{ form.name(class="form-control") }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="p-2">
+                            {{ form.email.label }}
+                        </td>
+                        <td class="p-2">
+                            {{ form.email(class="form-control") }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="p-2">
+                            {{ form.current_password.label }}
+                        </td>
+                        <td class="p-2">
+                            {{ form.current_password(class="form-control", id="current_password") }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="p-2">
+                            {{ form.new_password.label }}
+                        </td>
+                        <td class="p-2">
+                            {{ form.new_password(id="new_password", class="form-control") }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="p-2">
+                            {{ form.repeat_password.label }}
+                        </td>
+                        <td class="p-2">
+                            {{ form.repeat_password(id="repeat_password", class="form-control") }}
+                        </td>
+                    </tr>
+                    <tr class="text-center">
+                        <td colspan=2>
+                            {{ form.submit(id="profile_submit", class="btn") }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    <div>
 </div>
+<script>
+    const new_password = document.getElementById("new_password");
+    const repeat_password = document.getElementById("repeat_password");
+    const current_password = document.getElementById("current_password");
+    const profile_submit = document.getElementById("profile_submit");
+    profile_submit.disabled = true;
+    profile_submit.classList.add("disabled", "btn-secondary");
+
+    current_password.addEventListener("input", () => {
+        if (current_password.value.length > 7 && new_password.value === "") {
+            profile_submit.classList.remove("disabled", "btn-secondary");
+            profile_submit.classList.add("btn-success");
+            profile_submit.disabled = false;
+        } else {
+            profile_submit.disabled = true;
+            current_password.classList.add("disabled", "btn-secondary");
+            profile_submit.classList.remove("btn-success");
+        }
+    });
+
+    new_password.addEventListener("input", function () {
+        if (new_password.value === repeat_password.value && new_password.value !== "") {
+            profile_submit.classList.remove("disabled", "btn-secondary");
+            profile_submit.classList.add("btn-success");
+            profile_submit.disabled = false;
+        } else {
+            profile_submit.classList.remove("btn-success");
+            profile_submit.classList.add("disabled", "btn-secondary");
+            profile_submit.disabled = true;
+        }
+    });
+
+    repeat_password.addEventListener("input", () => {
+        if (repeat_password.value.length > 7 && repeat_password.value === new_password.value) {
+            profile_submit.classList.remove("disabled", "btn-secondary");
+            profile_submit.classList.add("btn-success");
+            profile_submit.disabled = false;
+        } else {
+            profile_submit.classList.remove("btn-success");
+            profile_submit.classList.add("disabled", "btn-secondary");
+            profile_submit.disabled = true;
+        }
+    });
+</script>
 {% endblock content%}
