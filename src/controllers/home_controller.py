@@ -23,7 +23,7 @@ def create_home_controller(users_usecase: ManageUsersUsecase, events_usecase: Ma
       event_pick, wishlist, pick_error = events_usecase.get_pick_from_event(user_id, event_selected)
     else:
       event_pick = wishlist = None
-      pick_error = "Crea un Evento Para Comenzar!"
+      pick_error = "Create an Event to Begin!"
       current_event = None
     
     return render_template(
