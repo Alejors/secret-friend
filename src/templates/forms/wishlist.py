@@ -1,12 +1,12 @@
 from flask_wtf import FlaskForm
-from wtforms import FieldList, FormField, StringField, SubmitField, FileField
+from wtforms import FieldList, FormField, StringField, SubmitField, IntegerField
 
 
 class ItemForm(FlaskForm):
-  element = StringField('Idea de regalo')
-  image = FileField('Carga una imagen: ')
-  url = StringField('Pega un link: ')
+  element = StringField('Gift Idea:')
+  price = IntegerField('Price:')
+  url = StringField('Example URL: ')
 
 class WishlistForm(FlaskForm):
   items = FieldList(FormField(ItemForm), min_entries=1)
-  submit = SubmitField('Actualizar Lista de Deseos')
+  submit = SubmitField('Update Wishlist')
