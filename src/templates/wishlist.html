@@ -11,7 +11,7 @@
         <h2 class="mb-3 text-light"> Wishes </h2>
         <table class="table table-warning">
             <thead>
-                <tr class="text-center">
+                <tr class="text-center align-middle">
                     <th scope="col">Wish</th>
                     <th scope="col">Price</th>
                     <th scope="col">Example URL</th>
@@ -38,12 +38,12 @@
                     </td>
                     <td>
                         <div class="d-flex justify-content-evenly">
-                            <div>
+                            <div class="mx-1">
                                 <a href="{{ url_for('wishlist.edit_item', item_id=item.id) }}">
                                     <button type="submit" class="btn btn-info btn-sm">Edit</button>
                                 </a>
                             </div>
-                            <div>
+                            <div class="mx-1">
                                 <form action="{{ url_for('wishlist.delete_item', item_id=item.id) }}" method="POST">
                                     <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                 </form>

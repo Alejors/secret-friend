@@ -10,8 +10,8 @@
     </div>
 </div>
 <div class="row d-flex justify-content-between">
-    <div class="col col-md-3">
-        <div class="ms-5">
+    <div class="col-12 col-md-3">
+        <div class="mx-3">
             {% if current_event %}
                 <a href="{{url_for("event.events_view")}}"><button class="btn btn-success mb-3" type="button">New Event</button></a>
             {% endif %}
@@ -27,7 +27,7 @@
             {% endif %}
         </div>
     </div>
-    <div class="col col-md-5">
+    <div class="col-12 col-md-5 mx-3">
         <h3>Event Information</h3>
         <form class="bg-secondary p-3" id="eventForm" action="{% if current_event %}{{url_for("event.events_view", event_id=current_event.id)}}{% else %}{{url_for("event.events_view")}}{% endif%}" method="POST">
         <div class="form-group">
@@ -98,7 +98,7 @@
             <br/>
             {% endif %}
     </div>
-    <div class="col col-md-3">
+    <div class="col-12 col-md-3">
         {% if current_event %}
             {% if not current_event.drawn %}
                 <a href="{{ url_for('event.draw_event', event_id=event_selected)}}">
