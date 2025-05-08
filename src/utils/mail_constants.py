@@ -3,14 +3,14 @@ HEADER = """
   <body>
     <div style="display: flex;">
     <img style="width: 50px; height: 50px;" src="https://secret-friend-bucket.s3.us-east-2.amazonaws.com/gift.png" alt="dibujo regalo" />
-    <h1>Amigo Secreto APP!</h1>
+    <h1>Secret Santa APP!</h1>
     </div>"""
 
 FOOTER = """
-    <p>Recuerda que puedes actualizar tu lista de deseos ingresando a <a href="https://secret-friend-341950148974.us-central1.run.app/s1" target="_blank">la aplicación</a>!</p>
+    <p>Remember you can update your wishlist login to <a href="https://alejoatria.pythonanywhere.com/" target="_blank">the app</a>!</p>
     <br/>
-    <p>Saludos!</p>
+    <p>Best Regards!</p>
     <br/>
-    <small>Te recordamos que si no tenías una cuenta creada antes de que se te incorporara en este evento, se creó una automáticamente. <br/>Se envió las credenciales iniciales a tu correo.</small>
+    <small>We remind you that if you did not have an account before you were included to this event, one was automatically created. <br/>The credentials were sent to your mail.</small>
   </body>
 </html>"""
