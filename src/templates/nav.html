@@ -1,19 +1,30 @@
-<nav style="background-color: #333; padding: 10px;">
-  <ul style="list-style-type: none; margin: 0; padding: 0; display: flex; justify-content: space-around;">
-    <li style="display: inline;">
-      <a href="{{url_for("home.home_view")}}" style="color: white; text-decoration: none; padding: 10px 20px; display: block;">Home</a>
-    </li>
-    <li style="display: inline;">
-      <a href="{{url_for("profile.profile_view")}}" style="color: white; text-decoration: none; padding: 10px 20px; display: block;">Profile</a>
-    </li>
-    <li style="display: inline;">
-      <a href="{{url_for("wishlist.wishlist_view")}}" style="color: white; text-decoration: none; padding: 10px 20px; display: block;">Wishlist</a>
-    </li>
-    <li style="display: inline;">
-      <a href="{{url_for("event.events_view")}}" style="color: white; text-decoration: none; padding: 10px 20px; display: block;">Manage Events</a>
-    </li>
-    <li style="display: inline; background-color: red; border-radius: 25px;">
-      <a href="{{url_for("landing.user_logout")}}" style="color: white; text-decoration: none; padding: 10px 20px; display: block;">Sign Out</a>
-    </li>
-  </ul>
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid d-flex justify-content-between">
+        <a class="navbar-brand" href="{{url_for('home.home_view')}}">
+            <img src="{{url_for('static', filename='img/gift.png')}}" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+            Secret Santa APP
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url_for("home.home_view")}}">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url_for("profile.profile_view")}}">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url_for("wishlist.wishlist_view")}}">Wishlist</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url_for("event.events_view")}}">Manage Events</a>
+                </li>
+                <li>
+                    <a href="{{url_for("landing.user_logout")}}" style="display: inline-block;  border-radius: 25px; color: white; background-color: red; text-decoration: none; padding: 10px 20px;">Sign Out</a>
+                </li>
+            </ul>
+        </div>
+    </div>
 </nav>
