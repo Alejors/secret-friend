@@ -14,6 +14,121 @@ Secret Santa APP is a web application where you can create and manage secret san
 - Jinja2
 - MySQL
 - Docker
+- Github Copilot
+
+## Structure
+
+The project was developed following a repository pattern. Requests are managed by a controller, the controller send the data to a usecase. Usecases have a specific repository which has the required methods to access or create records in databases, or create requests to third-party APIs (e.g. SendGrid). 
+
+The project was developed complying with **SOLID principles** and **ACID** transactions with rollbacks in when exceptions happen during event drawing.
+
+```
+secret-santa/                                   # Root directory of the project
+├── migrations/                                 # Alembic migrations directory
+│   ├── env.py                                  # Alembic environment configuration
+│   ├── script.py.mako                          # Alembic script template
+│   └── versions/                               # Directory for migration scripts
+├── src/                                        # Source code directory
+│   ├── controllers/                            # Flask controllers
+│   │   ├── __init__.py                         # Module initialization for easy access to imports
+│   │   ├── health_check.py                     # Controller for health check route
+│   │   ├── home_controller.py                  # Controller for home-related routes
+│   │   ├── landing_controller.py               # Controller for landing page routes (login/registry)
+│   │   ├── profile_controller.py               # Controller for profile-related routes
+│   │   ├── wishlist_controller.py              # Controller for wishlist-related routes
+│   │   └── event_controller.py                 # Controller for event-related routes
+│   ├── entities/                               # Domain entities
+│   │   ├── __init__.py                         # Module initialization
+│   │   ├── user.py                             # User entity
+│   │   ├── event.py                            # Event entity
+│   │   └── wish.py                             # Wish entity
+│   ├── frameworks/                             # Framework-specific utilities and configurations
+│   │   ├── db/                                 # Database-related utilities
+│   │   │   ├── __init__.py                     # Module initialization for the db package
+│   │   │   ├── seeds/                          # Database seeding scripts
+│   │   │   │   ├── __init__.py                 # Module initialization for the seeds package
+│   │   │   │   └── sql/                        # SQL seed scripts
+│   │   │   │       ├── init-data.sql           # Initial data for database seeding
+│   │   │   │       └── tables-dll.sql          # Database schema definitions
+│   │   │   └── sqlalchemy/                     # SQLAlchemy-specific utilities
+│   │   │       ├── __init__.py                 # Module initialization for the sqlalchemy package
+│   │   │       └── sqlalchemy_client.py        # SQLAlchemy client setup
+│   │   ├── http/                               # HTTP-related utilities
+│   │   │   ├── codes_constants.py              # HTTP response codes constants
+│   │   │   ├── flask.py                        # Flask application factory and configurations
+│   │   │   └── http_response_codes.py          # HTTP response status codes
+│   │   ├── jinja/                              # Jinja2-related utilities
+│   │   │   └── custom_filters.py               # Custom Jinja2 filters
+│   │   └── mail/                               # Email-related utilities
+│   │       ├── client.py                       # Gmail Mailing client implementation
+│   │       └── sendgrid_client.py              # SendGrid-specific mailing client
+│   ├── interfaces/                             # Interfaces for repositories and use cases
+│   │   ├── __init__.py                         # Module initialization
+│   │   ├── event_user_interface.py             # Interface for event_user repository
+│   │   ├── data_interface.py                   # Base interface for data repositories
+│   │   ├── mailer_interface.py                 # Interface for any mailing repository
+│   │   └── wishlist_interface.py               # Interface for wishlist repository
+│   ├── models/                                 # SQLAlchemy models
+│   │   ├── __init__.py                         # Module initialization
+│   │   ├── base_model.py                       # Base SQL Alchemy model. Including commong methods
+│   │   ├── user_model.py                       # User model
+│   │   ├── event_model.py                      # Event model
+│   │   └── wishlist_model.py                   # Wish model
+│   ├── repositories/                           # Repository implementations
+│   │   ├── __init__.py                         # Module initialization
+│   │   ├── base_repository.py                  # Base repository for SQLAlchemy
+│   │   ├── gmail_email_repository.py           # Repository to connect with Gmail mailing service
+│   │   ├── sendgrid_email_repository.py        # Repository to connect with SendGrid mailing service
+│   │   ├── sqlalchemy_user_repository.py       # SQLAlchemy User repository
+│   │   ├── sqlalchemy_event_repository.py      # SQLAlchemy Event Repository
+│   │   ├── sqlalchemy_event_user_repository.py # SQLAlchemy Event-User Repository
+│   │   └── sqlalchemy_wishlist_repository.py   # SQLAlchemy Wishlist repository
+│   ├── static/                                 # Static files directory
+│   │   └── img/                                # Images
+│   │       └── gift.png                        # Image used in the Navbar
+│   ├── templates/                              # Jinja2 templates directory
+│   │   ├── forms/                              # WTForms directory
+│   │   │   ├── __init__.py                     # Module initialization for imports
+│   │   │   ├── event.py                        # Event creation form
+│   │   │   ├── login.py                        # Login form
+│   │   │   ├── profile.py                      # Profile update form
+│   │   │   ├── registry.py                     # Sign up form
+│   │   │   └── wishlist.py                     # Wishes creation form
+│   │   ├── base.html                           # Base HTML template
+│   │   ├── nav.html                            # Navigation bar template
+│   │   ├── profile.html                        # Profile page template
+│   │   ├── wishlist.html                       # Wishlist page template
+│   │   ├── edit_item.html                      # Wish update page template
+│   │   ├── home.html                           # Home page template
+│   │   ├── login.html                          # Login page template
+│   │   ├── register.html                       # Registry page template
+│   │   ├── manage_events.html                  # Event management page template
+│   │   ├── flash_messages.html                 # CSS Styles for flash messages to be displayed
+│   │   ├── css_login.html                      # Login and registry specifig CSS styles
+│   │   └── css_html.html                       # CSS styles base styles included in base
+│   ├── usecases/                               # Application use cases
+│   │   ├── __init__.py                         # Module initialization
+│   │   ├── users_usecase.py                    # Use case for managing users
+│   │   ├── events_usecase.py                   # Use case for managing events
+│   │   └── wishlist_usecase.py                 # Use case for managing wishlists
+│   ├── utils/                                  # Utility functions
+│   │   ├── __init__.py                         # Module initialization
+│   │   ├── dates.py                            # Helper for date formatting
+│   │   ├── encryption.py                       # Helper for password encryption and checking
+│   │   ├── random_password.py                  # Function to generate random passwords
+│   │   ├── form_constants.py                   # Constants for WTForms
+│   │   ├── mail_constants.py                   # Constants for Mails templates
+│   │   └── token.py                            # Helper for token creation
+│   └── main.py                                 # Entry point for the Flask application
+├── .env.example                                # Example environment variables file
+├── .gitignore                                  # Git ignoring configuration
+├── alembic.ini                                 # Alembic configurations for migrations
+├── docker-compose.yml                          # Docker Compose configuration file
+├── Dockerfile                                  # Docker file with commands to build the main container
+├── README-ES.md                                # Spanish version of the project documentation
+├── README.md                                   # Project documentation
+└── requirements.txt                            # Text file for all required dependencies to be installed
+```
 
 #### Creating an Event
 
