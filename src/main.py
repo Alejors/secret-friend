@@ -1,14 +1,14 @@
 from src.frameworks.db.seeds.commands import seed
 from src.frameworks.http.flask import create_flask_app
 from src.frameworks.db.sqlalchemy import SQLAlchemyClient
-from src.frameworks.mail.client import MailingClient
+from src.frameworks.mail.sendgrid_client import SendgridClient
 
 from src.repositories import (
     SQLAlchemyUsersRepository,
     SQLAlchemyEventsRepository,
     SQLAlchemyWishlistRepository,
     SQLAlchemyEventUsersRepository,
-    GmailEmailRepository,
+    SendGridEmailRepository,
 )
 
 from src.usecases import (
@@ -28,14 +28,14 @@ from src.controllers import (
 
 # Clients
 sqlalchemy_client = SQLAlchemyClient()
-mailing_client = MailingClient()
+mailing_client = SendgridClient()
 
 # Repositories
 sqlalchemy_user_repository = SQLAlchemyUsersRepository(sqlalchemy_client)
 sqlalchemy_event_repository = SQLAlchemyEventsRepository(sqlalchemy_client)
 sqlalchemy_wishlist_repository = SQLAlchemyWishlistRepository(sqlalchemy_client)
 sqlalchemy_event_user_repository = SQLAlchemyEventUsersRepository(sqlalchemy_client)
-gmail_mailing_repository = GmailEmailRepository(mailing_client)
+sendgrid_mailing_repository = SendGridEmailRepository(mailing_client)
 
 # Usecases
 users_usecase = ManageUsersUsecase(sqlalchemy_user_repository)
@@ -49,7 +49,7 @@ events_usecase = ManageEventsUsecase(
     sqlalchemy_event_user_repository,
     users_usecase,
     wishlist_usecase,
-    gmail_mailing_repository,
+    sendgrid_mailing_repository,
 )
 
 blueprints = [
