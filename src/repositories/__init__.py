@@ -3,3 +3,4 @@ from .sqlalchemy_event_repository import SQLAlchemyEventsRepository
 from .sqlalchemy_wishlist_repository import SQLAlchemyWishlistRepository
 from .sqlalchemy_event_user_repository import SQLAlchemyEventUsersRepository
 from .gmail_email_repository import GmailEmailRepository
+from .sendgrid_email_repository import SendGridEmailRepository
