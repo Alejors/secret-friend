@@ -1,48 +1,51 @@
 {% extends "base.html" %}
 {% block title %}Register{% endblock title %}
+{% block styles %}{% include 'css_login.html' %}{% endblock styles%}
 {% block content %}
-<div class="login_form">
-  <form method="POST" action="{{ url_for('landing.register_view') }}">
-    {{ form.csrf_token }}
-    <h3>Regístrate</h3>
-    <div class="input_box">
-      {{ form.name.label }} {{ form.name }}
+<div class="row justify-content-center">
+    <div class="login_form">
+    <form method="POST" action="{{ url_for('landing.register_view') }}">
+        {{ form.csrf_token }}
+        <h3>Register</h3>
+        <div class="input_box">
+        {{ form.name.label }} {{ form.name }}
+        </div>
+        {% if form.name.errors %}
+        <ul class="errors">
+        {% for error in form.name.errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+        </ul>
+        <br/>
+        {% endif %}
+        <div class="input_box">
+        {{ form.email.label }} {{ form.email }}
+        </div>
+        {% if form.email.errors %}
+        <ul class="errors">
+        {% for error in form.email.errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+        </ul>
+        <br/>
+        {% endif %}
+        <div class="input_box">
+        <div class="password_title">
+            {{ form.password.label }}
+        </div>
+        {{ form.password }}
+        </div>
+        {% if form.password.errors %}
+        <ul class="errors">
+        {% for error in form.password.errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+        </ul>
+        <br/>
+        {% endif %}
+        {{ form.submit }}
+    </form>
+    <p class="sign_up">Already Have an Account? <a href="{{ url_for('landing.login_view') }}">Log In</a></p>
     </div>
-    {% if form.name.errors %}
-      <ul class="errors">
-      {% for error in form.name.errors %}
-        <li>{{ error }}</li>
-      {% endfor %}
-      </ul>
-      <br/>
-    {% endif %}
-    <div class="input_box">
-      {{ form.email.label }} {{ form.email }}
-    </div>
-    {% if form.email.errors %}
-      <ul class="errors">
-      {% for error in form.email.errors %}
-        <li>{{ error }}</li>
-      {% endfor %}
-      </ul>
-      <br/>
-    {% endif %}
-    <div class="input_box">
-      <div class="password_title">
-        {{ form.password.label }}
-      </div>
-      {{ form.password }}
-    </div>
-    {% if form.password.errors %}
-      <ul class="errors">
-      {% for error in form.password.errors %}
-        <li>{{ error }}</li>
-      {% endfor %}
-      </ul>
-      <br/>
-    {% endif %}
-    {{ form.submit }}
-  </form>
-  <p class="sign_up">Already Have an Account? <a href="{{ url_for('landing.login_view') }}">Log In</a></p>
 </div>
 {% endblock content %}

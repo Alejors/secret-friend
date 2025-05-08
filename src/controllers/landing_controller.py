@@ -16,7 +16,7 @@ def create_landing_controller(users_usecase: ManageUsersUsecase):
       data = request.form
       user, token = users_usecase.user_log_in(data)
       if not user:
-        flash("Las Credenciales No Coinciden", "error")
+        flash("Credentials Do Not Match", "error")
         return redirect(url_for('landing.login_view'))
       else:
         response = make_response(redirect(url_for('home.home_view')))
@@ -32,10 +32,10 @@ def create_landing_controller(users_usecase: ManageUsersUsecase):
       data = request.form
       user, error = users_usecase.create_user(data)
       if user:
-        flash("Registro Exitoso!", "success")
+        flash("Registered Succesfully!", "success")
         return redirect(url_for('landing.login_view'))
       else:
-        flash(f"Se Produjo un Error: {error}", "error")
+        flash(f"An Error Occurred: {error}", "error")
         return redirect(url_for('landing.register_view'))
     return render_template("register.html", form=form)
 
