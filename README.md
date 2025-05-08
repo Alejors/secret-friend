@@ -1,96 +1,101 @@
-# Amigo Secreto
+# Secret Santa APP
 
-## Descripción
+### Video Demo:  
+<[Watch the presentation](https://youtu.be/aZ5OnreyTc4)>
 
-El objetivo de este proyecto es poder gestionar concursos de amigo secreto.
+### Description:
 
-### Funcionamiento
+Secret Santa APP is a web application where you can create and manage secret santa contests.
 
-#### Creación Sorteo
+## Technologies:
 
-Un usuario se debe registrar, iniciar sesión y luego crear un Concurso.
-El concurso puede tener opcionalmente montos mínimos y máximos como valor del regalo.
-A este concurso le agregará participantes a través de su email (y nombre en caso que el usuario no exista).
+- Python
+- Flask
+- Jinja2
+- MySQL
+- Docker
 
-#### Lista de Deseos
+#### Creating an Event
 
-Cada usuario puede agregar regalos deseados para el concurso, de manera que otros puedan saber qué poder regalar a la persona u obtener ideas.
-Al momento de agregar elementos a la lista de deseos recibirán un recordatorio del monto que deberán respetar.
+To create an **Event**, you need to create and log into your account, navigate to the **Manage Events** tag, and define a name, optionally minimum and/or maximum gift price, and participants. 
 
-##### Consideraciones
+**Important**: *There is a minimum of 3 participants required to create a valid event (less than 3 would not make sense)*.
 
-En una primera instancia no hay cómo verificar el precio del objeto, pero se espera más adelante poder consultar por API los objetos deseados y obtener el valor de éstos, generando una alerta antes de agregar elementos que estén fuera de los parámetros establecidos.
+After creating the event, a purple button will be displayed on the right side of the screen (bottom if mobile), which says "Draw Event". Clicking this button will randomly pick contestants from the list and assign to each other participant for them to be secret Santa.
 
-#### Sortear
+#### Wishlist
 
-El dueño del concurso puede realizar el sorteo una vez que se hayan agregado todos los usuarios deseados. 
-Esto busca todos los usuarios registrados para ese concurso, escoge un usuario diferente para cada uno (sin incluirse a si mismo) y lo asigna.
+Optionally you can add *wishes* to your wishlist. 
+This wishes will show to your secret Santa when an event has been drawn it they:
 
-Cuando los usuarios participantes inicien sesión y seleccionen el concurso que ya se sorteó, deberían ver si el sorteo se efectuó, quién se seleccionó para ellos y la lista de deseos de ese usuario en caso que ya la haya creado.
+- Don't have a price.
+- It's price is set to 0.
+- They match the event's constraints (i.e. the event has a minimum of $10 and maximum of $20, only gifts within this range will appear).
+- The event doesn't have any price constraints.
 
-## Despliegue
+#### Profile
 
-Una vez clonado el repositorio, se debe crear un archivo _.env_, se puede tomar como ejemplo _.env.example_ que está configurado para funcionar de manera local con el contenedor de mysql. 
+You can change your name and password anytime, but not your email since it is the main distinctive information used when creating events.
 
-**Nota**: Se debe agregar un valor a *JWT_SECRET_KEY* como llave para la creación de JWT.
+#### Home
 
-Una vez realizado lo anterior, en el directorio donde se clonó el repositorio, ejecutar:
+Your home will show every Event you've been added to. Toggling events let you know who you are secret Santa for and the wishlist that matches the event's constraints.
+
+## Deployment
+
+Once the repository is cloned, the *.env* file must be created. You can use *.env.example* as boilerplate since it is configured to work locally.
+
+**Notes**: 
+- A *JWT_SECRET_KEY* and *FLASK_SECRET_KEY* are needed for flask to maintain sessions and tokens to be created and checked.
+- A *SENDGRID_API_KEY* and *MAIL_USER* must be added if you want mails to be delivered using SendGrid.
+
+Once the previous is done, run the command:
 
 ```
 docker-compose up --build
 ```
 
-Esto descargará las imágenes necesarias, compilará los contenedores en orden y levantará el proyecto.
+This will clone necessary docker images, compile them and start the containers (Python 3.12 and MySQL). 
 
-### Verificación
+### Healthcheck
 
-Para poder verificar que la API está corriendo se puede ejecuta:
+To verify the application is up and ready, you can make a request from your terminal by running:
 
 ```
-curl --location 'localhost:8000/v1'
+curl --location 'localhost:8000/health-check'
 ```
 
-## Migraciones
+## Migrations
 
-### Correr
+### Run
 
-Con el servicio levantado se necesita correr las migraciones para que se creen las tablas en la DB.
-Para esto se debe ejecutar:
+Once the service is up, the Database needs to run migrations for the tables to be created. This application uses *alembic*, so running migrations is easy as running:
 
 ```
 docker-compose exec api alembic upgrade head
 ```
 
-### Crear Nuevas
+### Creating New Migrations
 
-En caso que se modifiquen los modelos de las DB, se debe ejecutar los comandos de Alembic para poder crear nuevas migraciones.
+In case DB models are modified, an alembic command can be run to create new migrations:
 
 ```
-docker-compose exec api alembic revision --autogenerate -m"<Mensaje descriptivo>"
+docker-compose exec api alembic revision --autogenerate -m"<descriptive message>"
 ```
 
-Esto creará un nuevo documento en el directorio *migrations/versions*. Es necesario revisar que la migración esté correcta y corregir lo que sea necesario.
-Una vez realizado esto, se debe [correr migración](#correr).
+Migrations will be stored in: *migrations/versions*. 
 
-## Poblar Bases de Datos
+## DB Seeding
 
-Con las tablas ya pobladas, se puede ejecutar el comando propio *seed* agregado a la app de Flask.
-Para esto se debe ejecutar:
+With the Database already up to date, you can insert test information using seeds.
+To help with this, the command *seed* was created and you can run:
 
 ```
 docker-compose exec api flask --app src.main:app seed
 ```
 
-Esto correrá los scripts SQL definidos en el comando:
+This command runs SQL statements defined in:
 
 - init-data.sql
 
-La contraseña definida para los usuarios de prueba es Hola1234, considerando que se use el *JWT_SECRET_KEY* **MyM3g45up3r53cr3tK3y!**. 
-
-*nota*: por favor no usar este secret key en ambientes productivos.
-
-## Uso de S3Ninja
-
-El servicio S3 Ninja es un emulador de AWS S3. Este contenedor se carga como parte de docker-compose. Las credenciales para conectarse se encuentran dentro de su UI, que se puede encontrar en http://localhost:<S3_PORT>.
-
-Se creó un volumen para la persistencia de la data que se sube.
+The passwords defined for seeded users is Hola1234, considering the *JWT_SECRET_KEY*: **MyM3g45up3r53cr3tK3y!** 

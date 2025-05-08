@@ -19,8 +19,8 @@ INSERT IGNORE INTO `users` (id, name, email, password) VALUES
   "scrypt:32768:8:1$ixo0slrUvaoHEGEN$8f67ea38cb2ec5504a679332208c0b193efb78cf30f10efe59c2789b190b0c0794c2bd0b8a9ff3981027a866814afb9c2f53c259a34ea017cb8aa2826abd9db8");
 
 INSERT IGNORE INTO `events` (id, name, owner_id, min_price, max_price, drawn) VALUES
-  (1, "Test Contest", 1, 1000, 5000, 1),
-  (2, "Navidad 2024", 6, 5000, 10000, 0);
+  (1, "Test Contest", 1, 1, 5, 1),
+  (2, "Navidad 2024", 6, 5, 10, 0);
 
 INSERT IGNORE INTO `event_users` (user_id, event_id, pick_id) VALUES
   (1, 1, 2),
@@ -34,12 +34,12 @@ INSERT IGNORE INTO `event_users` (user_id, event_id, pick_id) VALUES
   (9, 2, null),
   (10, 2, null);
 
-INSERT IGNORE INTO `wishlist` (id, user_id, event_id, element, `url`) VALUES
-  (1, 1, 1, "Tocomple", "https://upload.wikimedia.org/wikipedia/commons/e/e0/Completo_italiano.jpg"),
+INSERT IGNORE INTO `wishlist` (id, user_id, price, element, `url`) VALUES
+  (1, 1, 5, "Tocomple", "https://upload.wikimedia.org/wikipedia/commons/e/e0/Completo_italiano.jpg"),
   (2, 1, 1, "Bibia Fruna", "https://fruna.restonauta.cl/wp-content/uploads/2021/03/Fruna-Bebida-Pina-500ml.jpg"),
-  (3, 2, 1, "Chorito Hello Kitty", "https://i.pinimg.com/originals/a9/59/c1/a959c103d1980f400c463b5e54385ecc.png"),
-  (4, 2, 1, "Cualquier cosita", "https://www.librerianorma.com/images/Caratula/Responsive/9789580016830.jpg"),
-  (5, 7, 2, "El terrible italiano", "https://upload.wikimedia.org/wikipedia/commons/e/e0/Completo_italiano.jpg"),
-  (6, 7, 2, "Fruna Piña", "https://fruna.restonauta.cl/wp-content/uploads/2021/03/Fruna-Bebida-Pina-500ml.jpg"),
+  (3, 2, 2, "Chorito Hello Kitty", "https://i.pinimg.com/originals/a9/59/c1/a959c103d1980f400c463b5e54385ecc.png"),
+  (4, 2, null, "Cualquier cosita", "https://www.librerianorma.com/images/Caratula/Responsive/9789580016830.jpg"),
+  (5, 7, 3, "El terrible italiano", "https://upload.wikimedia.org/wikipedia/commons/e/e0/Completo_italiano.jpg"),
+  (6, 7, 1, "Fruna Piña", "https://fruna.restonauta.cl/wp-content/uploads/2021/03/Fruna-Bebida-Pina-500ml.jpg"),
   (7, 8, 2, "Monedero Hello Kitty", "https://i.pinimg.com/originals/a9/59/c1/a959c103d1980f400c463b5e54385ecc.png"),
-  (8, 8, 2, "Un libro", "https://www.librerianorma.com/images/Caratula/Responsive/9789580016830.jpg");
+  (8, 8, 6, "Un libro", "https://www.librerianorma.com/images/Caratula/Responsive/9789580016830.jpg");
